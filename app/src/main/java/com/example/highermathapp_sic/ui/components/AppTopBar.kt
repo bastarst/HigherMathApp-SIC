@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.MaterialTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +32,10 @@ fun MathAppTopBar(
                      contentDescription = "Menu"
                  )
              }
-         }
+         },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     )
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.highermathapp_sic.ui.components.MathAppTopBar
+import com.example.highermathapp_sic.ui.components.MatrixInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +30,7 @@ fun LASecondScreen(
                 modifier = Modifier.padding(8.dp),
                 text = "LA TEST 2",
             )
+            //MatrixInput()
         }
     }
 }
