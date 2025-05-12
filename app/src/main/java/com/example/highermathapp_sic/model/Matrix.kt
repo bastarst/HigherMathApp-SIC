@@ -1,6 +1,9 @@
 package com.example.highermathapp_sic.model
 
+import kotlin.collections.joinToString
 import kotlin.random.Random
+import kotlin.ranges.until
+import kotlin.text.format
 
 class Matrix(private val rows: Int, private val cols: Int) {
     private val data: Array<IntArray> = Array(rows) { IntArray(cols) }
@@ -9,6 +12,33 @@ class Matrix(private val rows: Int, private val cols: Int) {
         for (i in 0 until rows) {
             for (j in 0 until cols) {
                 data[i][j] = initializer(i, j)
+            }
+        }
+    }
+
+    constructor(rows: Int, cols: Int, randomize: Boolean) : this(rows, cols) {
+        if (randomize) {
+            for (i in 0 until rows) {
+                for (j in 0 until cols) {
+                    data[i][j] = Random.nextInt(0, 11)
+                }
+            }
+        }
+    }
+
+    constructor(serialized: String) : this(
+        serialized.split(";")[0].toInt(),
+        serialized.split(";")[1].toInt()
+    ) {
+        val parts = serialized.split(";")
+        require(parts.size == 3) { "Неверный формат" }
+
+        val values = parts[2].split(",").map { it.toInt() }
+        require(values.size == rows * cols) { "Размерность не совпадает с данными" }
+
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                data[i][j] = values[i * cols + j]
             }
         }
     }
@@ -65,5 +95,37 @@ class Matrix(private val rows: Int, private val cols: Int) {
                 data[i][j] = Random.nextInt(0, 11)
             }
         }
+    }
+
+    fun toFlatString() : String {
+        val flatData = buildString {
+            for (i in 0 until rows) {
+                for (j in 0 until cols) {
+                    append(data[i][j])
+                    if (i != rows - 1 || j != cols - 1) append(",")
+                }
+            }
+        }
+        return "$rows;$cols;$flatData"
+    }
+
+    fun fromFlatString(serialized: String): Matrix {
+        val parts = serialized.split(";")
+        require(parts.size == 3) { "Неверный формат" }
+
+        val rows = parts[0].toInt()
+        val cols = parts[1].toInt()
+        val values = parts[2].split(",").map { it.toInt() }
+
+        require(values.size == rows * cols) { "Размерность не совпадает с данными" }
+
+        val matrix = Matrix(rows, cols)
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                matrix.set(i, j, values[i * cols + j])
+            }
+        }
+
+        return matrix
     }
 }

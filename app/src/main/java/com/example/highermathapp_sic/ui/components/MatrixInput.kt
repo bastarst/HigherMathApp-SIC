@@ -31,7 +31,10 @@ import androidx.compose.ui.unit.dp
 import com.example.highermathapp_sic.model.Matrix
 
 @Composable
-fun MatrixInput(matrixAnswer: Matrix) {
+fun MatrixInput(
+    matrixAnswer: Matrix,
+    onResultChecked: (Boolean) -> Unit
+) {
     val showDialog = remember { mutableStateOf(false) }
     val createMatrix = remember { mutableStateOf(false) }
     val rows = remember { mutableIntStateOf(1) }
@@ -51,10 +54,10 @@ fun MatrixInput(matrixAnswer: Matrix) {
 
         if(showDialog.value) {
             AlertDialog(
-                onDismissRequest = {showDialog.value = false},
+                onDismissRequest = { showDialog.value = false },
                 title = { Text("Выбор размера матрицы") },
                 text = {
-                    MatrixSizeGrid {r, c ->
+                    MatrixSizeGrid { r, c ->
                         rows.intValue = r
                         cols.intValue = c
                     }
@@ -89,15 +92,10 @@ fun MatrixInput(matrixAnswer: Matrix) {
         Button(
             onClick = {
                 isCorrect.value = matrixAnswer.equals(userMatrix.value)
+                onResultChecked(isCorrect.value!!)
             }
         ) {
             Text("Проверить")
-        }
-
-        isCorrect.value?.let {
-            Text(
-                text = if (it) "✅ Ответ верный" else "❌ Ответ неверный"
-            )
         }
     }
 }

@@ -9,14 +9,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.highermathapp_sic.data.TaskViewModel
 import com.example.highermathapp_sic.ui.components.MathAppTopBar
 import com.example.highermathapp_sic.ui.components.MatrixInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LASecondScreen(
-    navController: NavController
+    navController: NavController,
+    vm: TaskViewModel = viewModel()
 ) {
     Scaffold(
         topBar = { MathAppTopBar("Main", navController) }
