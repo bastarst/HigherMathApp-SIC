@@ -26,11 +26,23 @@ fun AppNav(vm: TaskViewModel = viewModel()) {
         composable("MainScreen") {
             MainScreen(navController, vm)
         }
-        composable("LAFirstScreen") {
-            LAFirstScreen(navController, vm)
+        composable("MatrixAddSub") {
+            MatrixAddSub(navController, vm)
         }
-        composable("LASecondScreen") {
-            LASecondScreen(navController, vm)
+        composable("MatrixMul") {
+            MatrixMul(navController, vm)
+        }
+        composable("MatrixDet") {
+            MatrixDet(navController, vm)
+        }
+        composable("MatrixMinor") {
+            MatrixMinor(navController, vm)
+        }
+        composable("MatrixInverse") {
+            MatrixInverse(navController, vm)
+        }
+        composable("MatrixCramerRule") {
+            MatrixCramerRule(navController, vm)
         }
         composable("CFirstScreen") {
             CFirstScreen(navController)

@@ -2,16 +2,12 @@ package com.example.highermathapp_sic.ui.screens.linearalgebra
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,8 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,7 +25,6 @@ import androidx.navigation.NavController
 import com.example.highermathapp_sic.data.TaskGroup
 import com.example.highermathapp_sic.data.TaskType
 import com.example.highermathapp_sic.data.TaskViewModel
-import com.example.highermathapp_sic.model.Matrix
 import com.example.highermathapp_sic.model.TaskContentConverter
 import com.example.highermathapp_sic.ui.components.BaseScreenLayout
 import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
@@ -41,39 +34,81 @@ import com.example.highermathapp_sic.ui.components.MatrixView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MatrixAddSub(
+fun MatrixMul(
     navController: NavController,
     vm: TaskViewModel = viewModel()
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Матрицы. Сложение и вычитание"
+        title = "Матрицы. Умножение"
     ) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = "LA TEST 1",
-        )
-        TaskMatrixAdd(vm)
-        TaskMatrixSub(vm)
+        Text("LA TEST 2")
+        TaskMulMatrixByNum(vm)
+        TaskMulMatrixByMatrix1(vm)
+        TaskMulMatrixByMatrix2(vm)
     }
 }
 
 @Composable
-fun TaskMatrixAdd(vm: TaskViewModel) {
-    val matrixList = vm.taskList.observeAsState(listOf())
+fun TaskMulMatrixByNum(vm: TaskViewModel) {
+    val taskList = vm.taskList.observeAsState(listOf())
 
     Row {
-        if(matrixList.value.isEmpty()) {
+        if(taskList.value.isEmpty()) {
             Text("Загрузка", style = MaterialTheme.typography.titleLarge)
         } else {
-            val lastMatrix = matrixList.value.lastOrNull {
+            val taskEntity = taskList.value.lastOrNull() {
                 it.taskGroup == TaskGroup.LINEAR_ALGEBRA
-                it.taskType == TaskType.ADDITION
+                it.taskType == TaskType.MULTIPLICATION_BY_NUM
+            }!!
+            val isAnswerCorrect = taskEntity.isAnswerCorrect
+            val (num ,matrix) = TaskContentConverter.decodeNumAndMatrix(taskEntity!!.taskContent!!)
+            val correctAnswer = matrix * num
+
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(num.toString(), style = MaterialTheme.typography.titleLarge)
+
+                    Icon(Icons.Default.Clear, contentDescription = "Mul")
+
+                    MatrixView(matrix)
+
+                    Text("=", style = MaterialTheme.typography.titleLarge)
+
+                    MatrixInput(
+                        matrixAnswer = correctAnswer,
+                        isAnswerCorrect = isAnswerCorrect,
+                        viewModel = vm,
+                        taskEntity = taskEntity
+                    )
+                }
+
+                IsAnswerCorrect(isAnswerCorrect)
+            }
+        }
+    }
+}
+
+@Composable
+fun TaskMulMatrixByMatrix1(vm: TaskViewModel) {
+    val taskList = vm.taskList.observeAsState(listOf())
+
+    Row {
+        if(taskList.value.isEmpty()) {
+            Text("Загрузка", style = MaterialTheme.typography.titleLarge)
+        } else {
+            val lastMatrix = taskList.value.lastOrNull {
+                it.taskGroup == TaskGroup.LINEAR_ALGEBRA
+                it.taskType == TaskType.MULTIPLICATION_BY_MATRIX_1
             }!!
             val isAnswerCorrect = lastMatrix.isAnswerCorrect
             val matrixEntity = lastMatrix
             val (matrixA, matrixB) = TaskContentConverter.decodePairMatrix(matrixEntity.taskContent!!)
-            val correctAnswer = matrixA + matrixB
+            val correctAnswer = matrixA * matrixB
+
             Column {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -81,7 +116,7 @@ fun TaskMatrixAdd(vm: TaskViewModel) {
                 ) {
                     MatrixView(matrixA)
 
-                    Text("+", style = MaterialTheme.typography.titleLarge)
+                    Icon(Icons.Default.Clear, contentDescription = "Mul")
 
                     MatrixView(matrixB)
 
@@ -102,21 +137,21 @@ fun TaskMatrixAdd(vm: TaskViewModel) {
 }
 
 @Composable
-fun TaskMatrixSub(vm: TaskViewModel) {
-    val matrixList = vm.taskList.observeAsState(listOf())
+fun TaskMulMatrixByMatrix2(vm: TaskViewModel) {
+    val taskList = vm.taskList.observeAsState(listOf())
 
     Row {
-        if(matrixList.value.isEmpty()) {
-            Text("Загрузка", style = MaterialTheme.typography.titleLarge)
+        if(taskList.value.isEmpty()) {
+            Text("Загрузка")
         } else {
-            val lastMatrix = matrixList.value.lastOrNull {
+            val lastMatrix = taskList.value.lastOrNull {
                 it.taskGroup == TaskGroup.LINEAR_ALGEBRA
-                it.taskType == TaskType.SUBTRACTION
+                it.taskType == TaskType.MULTIPLICATION_BY_MATRIX_2
             }!!
             val isAnswerCorrect = lastMatrix.isAnswerCorrect
             val matrixEntity = lastMatrix
             val (matrixA, matrixB) = TaskContentConverter.decodePairMatrix(matrixEntity.taskContent!!)
-            val correctAnswer = matrixA - matrixB
+            val correctAnswer = matrixA * matrixB
 
             Column {
                 Row(
@@ -125,7 +160,7 @@ fun TaskMatrixSub(vm: TaskViewModel) {
                 ) {
                     MatrixView(matrixA)
 
-                    Text("-", style = MaterialTheme.typography.titleLarge)
+                    Icon(Icons.Default.Clear, contentDescription = "Mul")
 
                     MatrixView(matrixB)
 

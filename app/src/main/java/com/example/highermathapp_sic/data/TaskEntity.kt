@@ -8,7 +8,7 @@ data class TaskEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val taskGroup: TaskGroup? = null,
-    val taskType: TaskType? = null,
+    var taskType: TaskType? = null,
     val taskContent: String? = null,
     val isAnswerCorrect: Boolean? = null
 )

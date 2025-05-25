@@ -1,17 +1,24 @@
 package com.example.highermathapp_sic.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,26 +35,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.highermathapp_sic.data.TaskEntity
+import com.example.highermathapp_sic.data.TaskViewModel
 import com.example.highermathapp_sic.model.Matrix
 
 @Composable
 fun MatrixInput(
     matrixAnswer: Matrix,
-    onResultChecked: (Boolean) -> Unit
+    isAnswerCorrect: Boolean?,
+    viewModel: TaskViewModel,
+    taskEntity: TaskEntity
 ) {
     val showDialog = remember { mutableStateOf(false) }
     val createMatrix = remember { mutableStateOf(false) }
     val rows = remember { mutableIntStateOf(1) }
     val cols = remember { mutableIntStateOf(1) }
     val userMatrix = remember { mutableStateOf(Matrix(1, 1)) }
-    val isCorrect = remember { mutableStateOf<Boolean?>(null) }
+    val isCorrect = remember { mutableStateOf<Boolean>(false) }
 
     Column {
         Button(
             onClick = {
                 showDialog.value = true
                 createMatrix.value = false
-            }
+            },
+            enabled = isAnswerCorrect != true
         ) {
             Text(text = "Создать матрицу")
         }
@@ -85,17 +97,33 @@ fun MatrixInput(
             )
         }
 
-        if (createMatrix.value && rows.intValue > 0 && cols.intValue > 0) {
-            MatrixEditor(rows.intValue, cols.intValue, userMatrix)
+        if (isAnswerCorrect != true && createMatrix.value && rows.intValue > 0 && cols.intValue > 0) {
+            MatrixEditor(rows.intValue, cols.intValue, userMatrix, isAnswerCorrect, matrixAnswer)
         }
 
-        Button(
-            onClick = {
-                isCorrect.value = matrixAnswer.equals(userMatrix.value)
-                onResultChecked(isCorrect.value!!)
+        if (isAnswerCorrect == true) {
+            MatrixEditor(matrixAnswer.getRowCount(), matrixAnswer.getColCount(), userMatrix, isAnswerCorrect, matrixAnswer)
+        }
+
+        Column {
+            Row {
+                Button(
+                    onClick = {
+                        isCorrect.value = matrixAnswer.equals(userMatrix.value)
+                        viewModel.updateAnswerCorrect(taskEntity.id, isCorrect.value)
+                    }
+                ) {
+                    Text("Проверить")
+                }
+
+                if (isAnswerCorrect == true) {
+                    IconButton(onClick = {
+                        viewModel.updateTask(taskEntity)
+                    }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                    }
+                }
             }
-        ) {
-            Text("Проверить")
         }
     }
 }
@@ -134,7 +162,9 @@ fun MatrixSizeGrid(
 fun MatrixEditor(
     rows: Int,
     cols: Int,
-    matrixState: MutableState<Matrix>
+    matrixState: MutableState<Matrix>,
+    isAnswerCorrect: Boolean?,
+    correctAnswer: Matrix
 ) {
     val matrix = remember {
         mutableStateListOf(
@@ -148,23 +178,30 @@ fun MatrixEditor(
         repeat(rows) { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 repeat(cols) { col ->
-                    BasicTextField(
-                        value = matrix[row][col],
+                    Box(
                         modifier = Modifier
-                            .background(Color.LightGray)
-                            .width(32.dp),
-                        onValueChange = {
-                            if (it.length <= 3 && it.all { ch -> ch.isDigit() }) {
-                                matrix[row][col] = it
-                                matrixState.value = toMatrix(matrix)
-                            }
-                        },
-                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
+                            .border(
+                                width = 1.dp,
+                                color = Color.Black,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .padding(4.dp)
+                    ) {
+                        BasicTextField(
+                            value = if(isAnswerCorrect == true) correctAnswer.get(row, col).toString() else matrix[row][col],
+                            modifier = Modifier
+                                .width(32.dp),
+                            onValueChange = {
+                                if (it.length <= 4 && it.matches(Regex("-?\\d{0,3}"))) {
+                                    matrix[row][col] = it
+                                    matrixState.value = toMatrix(matrix)
+                                }
+                            },
+                            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                            singleLine = true,
+                            readOnly = isAnswerCorrect == true
                         )
-                    )
+                    }
                 }
             }
         }
@@ -176,42 +213,5 @@ private fun toMatrix(data: List<List<String>>): Matrix {
     val cols = if (rows > 0) data[0].size else 0
     return Matrix(rows, cols) { i, j ->
         data[i][j].toIntOrNull() ?: 0
-    }
-}
-
-@Composable
-fun MatrixView(matrix: Matrix) {
-    Box(
-        modifier = Modifier
-            .drawBehind {
-                val color = Color.Black
-
-                drawLine(
-                    color = color,
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, size.height),
-                    strokeWidth = 4.dp.toPx()
-                )
-
-                drawLine(
-                    color = color,
-                    start = Offset(size.width, 0f),
-                    end = Offset(size.width, size.height),
-                    strokeWidth = 4.dp.toPx()
-                )
-            }
-    ) {
-        Column() {
-            for (i in 0 until matrix.getRowCount()) {
-                Row() {
-                    for (j in 0 until matrix.getColCount()) {
-                        Text(
-                            " %d ".format(matrix.get(i, j)),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-        }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.highermathapp_sic.model.Matrix
 import com.example.highermathapp_sic.model.TaskContentConverter
+import com.example.highermathapp_sic.model.TaskGenerator
 
 class TaskViewModel(application: Application) : ViewModel() {
     val taskList: LiveData<List<TaskEntity>>
@@ -27,13 +28,25 @@ class TaskViewModel(application: Application) : ViewModel() {
     }
 
     private fun initialLADataBase() {
-        val matrixAddString = TaskContentConverter.encode(Matrix(2, 2, randomize = true), Matrix(2, 2, randomize = true))
-        addTask(matrixAddString, TaskGroup.LINEAR_ALGEBRA, TaskType.ADDITION)
+        addLATask(TaskType.ADDITION)
+        addLATask(TaskType.SUBTRACTION)
+        addLATask(TaskType.MULTIPLICATION_BY_NUM)
+        addLATask(TaskType.MULTIPLICATION_BY_MATRIX_1)
+        addLATask(TaskType.MULTIPLICATION_BY_MATRIX_2)
+        addLATask(TaskType.DET_2X2)
+        addLATask(TaskType.DET_3X3)
+        addLATask(TaskType.MINOR)
+        addLATask(TaskType.INVERSE)
+        addLATask(TaskType.CRAMER_RULE)
     }
 
-    fun updateTaskWithRandom2X2Matrices(id:Int) {
-        val matrixAddString = TaskContentConverter.encode(Matrix(2, 2, randomize = true), Matrix(2, 2, randomize = true))
-        repository.updateTask(id, matrixAddString)
+    fun updateTask(taskEntity: TaskEntity) {
+        val updatedTaskContent = when (taskEntity.taskGroup!!) {
+            TaskGroup.LINEAR_ALGEBRA -> TaskGenerator.generateLinearAlgebraTask(taskEntity.taskType!!)
+            TaskGroup.CALCULUS -> TODO()
+            TaskGroup.DIFF_EQ -> TODO()
+        }
+        repository.updateTask(taskEntity.id, updatedTaskContent)
     }
 
     fun addTask(taskContent: String, taskGroup: TaskGroup, taskType: TaskType) {
@@ -47,5 +60,14 @@ class TaskViewModel(application: Application) : ViewModel() {
 
     fun updateAnswerCorrect(id: Int, isCorrect: Boolean) {
         repository.updateAnswerCorrect(id, isCorrect)
+    }
+
+    fun clearAllTasks() {
+        repository.clearAllTasks()
+        initialTaskDataBase()
+    }
+
+    private fun addLATask(taskType: TaskType) {
+        addTask(TaskGenerator.generateLinearAlgebraTask(taskType), TaskGroup.LINEAR_ALGEBRA, taskType)
     }
 }

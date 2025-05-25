@@ -1,6 +1,7 @@
 package com.example.highermathapp_sic.model
 
 import kotlin.collections.joinToString
+import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.ranges.until
 import kotlin.text.format
@@ -20,10 +21,20 @@ class Matrix(private val rows: Int, private val cols: Int) {
         if (randomize) {
             for (i in 0 until rows) {
                 for (j in 0 until cols) {
-                    data[i][j] = Random.nextInt(0, 11)
+                    data[i][j] = Random.nextInt(-5, 6)
                 }
             }
         }
+    }
+
+    constructor(size: Int, notZeroDet: Boolean) : this(size, size) {
+        do {
+            for (i in 0 until rows) {
+                for (j in 0 until cols) {
+                    data[i][j] = Random.nextInt(-5, 6)
+                }
+            }
+        } while (this.determinant() == 0)
     }
 
     constructor(serialized: String) : this(
@@ -36,6 +47,15 @@ class Matrix(private val rows: Int, private val cols: Int) {
         val values = parts[2].split(",").map { it.toInt() }
         require(values.size == rows * cols) { "Размерность не совпадает с данными" }
 
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                data[i][j] = values[i * cols + j]
+            }
+        }
+    }
+
+    constructor(rows: Int, cols: Int, values: List<Int>) : this(rows, cols) {
+        require(values.size == rows * cols) { "Размер данных (${values.size}) не совпадает с размерами матрицы ($rows x $cols)" }
         for (i in 0 until rows) {
             for (j in 0 until cols) {
                 data[i][j] = values[i * cols + j]
@@ -89,11 +109,19 @@ class Matrix(private val rows: Int, private val cols: Int) {
         }
     }
 
-    fun fillRandom() {
-        for (i in 0 until rows) {
-            for (j in 0 until cols) {
-                data[i][j] = Random.nextInt(0, 11)
+    operator fun times(scalar: Int): Matrix {
+        return Matrix(rows, cols) { i, j -> data[i][j] * scalar }
+    }
+
+    operator fun times(other: Matrix): Matrix {
+        require(cols == other.rows) { "Невозможно перемножить: ${cols} != ${other.rows}" }
+
+        return Matrix(rows, other.cols) { i, j ->
+            var sum = 0
+            for (k in 0 until cols) {
+                sum += this.data[i][k] * other.data[k][j]
             }
+            sum
         }
     }
 
@@ -109,23 +137,64 @@ class Matrix(private val rows: Int, private val cols: Int) {
         return "$rows;$cols;$flatData"
     }
 
-    fun fromFlatString(serialized: String): Matrix {
-        val parts = serialized.split(";")
-        require(parts.size == 3) { "Неверный формат" }
+    fun determinant(): Int {
+        require(rows == cols) { "Определитель можно вычислить только для квадратной матрицы" }
 
-        val rows = parts[0].toInt()
-        val cols = parts[1].toInt()
-        val values = parts[2].split(",").map { it.toInt() }
+        return when (rows) {
+            1 -> data[0][0]
+            2 -> data[0][0] * data[1][1] - data[0][1] * data[1][0]
+            3 -> {
+                val a = data
+                a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]) -
+                        a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]) +
+                        a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])
+            }
+            else -> throw UnsupportedOperationException("Определитель поддерживается только для размеров 1x1, 2x2 и 3x3")
+        }
+    }
 
-        require(values.size == rows * cols) { "Размерность не совпадает с данными" }
+    fun minor(i: Int, j: Int): Int {
+        require(rows == cols) { "Миноры можно вычислять только для квадратных матриц" }
+        require(rows >= 2) { "Минор не определён для матриц меньше 2x2" }
+        require(i in 0 until rows && j in 0 until cols) { "Индекс вне границ" }
 
-        val matrix = Matrix(rows, cols)
+        val minorMatrix = Matrix(rows - 1, cols - 1) { r, c ->
+            val srcRow = if (r >= i) r + 1 else r
+            val srcCol = if (c >= j) c + 1 else c
+            data[srcRow][srcCol]
+        }
+
+        return minorMatrix.determinant()
+    }
+
+    fun allMinors(): List<Int> {
+        require(rows == cols) { "Миноры определены только для квадратной матрицы" }
+        require(rows >= 2) { "Миноры не определены для матриц меньше 2x2" }
+
+        val minors = mutableListOf<Int>()
+
         for (i in 0 until rows) {
             for (j in 0 until cols) {
-                matrix.set(i, j, values[i * cols + j])
+                minors.add(minor(i, j) * (-1.0).pow(i + j + 2).toInt())
             }
         }
 
-        return matrix
+        return minors
+    }
+
+    fun transpose(): Matrix {
+        return Matrix(cols, rows) { i, j -> data[j][i]}
+    }
+
+    fun inverseFromMinors(): Matrix {
+        require(rows == cols) { "Матрица должна быть квадратной" }
+        require(rows >= 2 && rows <= 3) { "Поддерживаются размеры 2x2 и 3x3" }
+
+        val result = Matrix(rows, cols) { i, j ->
+            val sign = if ((i + j) % 2 == 0) 1 else -1
+            sign * minor(i, j)
+        }
+
+        return result.transpose()
     }
 }

@@ -2,6 +2,7 @@ package com.example.highermathapp_sic.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,8 +26,12 @@ fun NavScreen(
     val screenGroups: Map<String, List<Pair<String, String>>> = mapOf(
         "Главный экран" to listOf("Главный экран" to "MainScreen"),
         "Линейная алгебра" to listOf(
-            "1" to "LAFirstScreen",
-            "2" to "LASecondScreen"
+            "Матрицы. Сложение и вычитание" to "MatrixAddSub",
+            "Матрицы. Умножение" to "MatrixMul",
+            "Матрицы. Определитель" to "MatrixDet",
+            "Матрицы. Минор" to "MatrixMinor",
+            "Обратная матрица" to "MatrixInverse",
+            "СЛАУ. Метод Крамера" to "MatrixCramerRule"
         ),
         "Математический анализ" to listOf(
             "3" to "CFirstScreen",

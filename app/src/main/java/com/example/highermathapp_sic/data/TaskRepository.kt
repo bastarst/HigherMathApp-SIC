@@ -8,17 +8,17 @@ import kotlinx.coroutines.launch
 class TaskRepository(private val matrixDao: TaskDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    val tasks: LiveData<List<TaskEntity>> = matrixDao.getAllMatrixEntity()
+    val tasks: LiveData<List<TaskEntity>> = matrixDao.getAllTaskEntity()
 
     fun addTask(task: TaskEntity) {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.insertMatrixTask(task)
+            matrixDao.insertTask(task)
         }
     }
 
     fun removeTask(id: Int) {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.deleteMatrixTask(id)
+            matrixDao.deleteTask(id)
         }
     }
 
@@ -31,6 +31,12 @@ class TaskRepository(private val matrixDao: TaskDao) {
     fun updateTask(id: Int, taskContent: String) {
         coroutineScope.launch(Dispatchers.IO) {
             matrixDao.updateTask(id, taskContent)
+        }
+    }
+
+    fun clearAllTasks() {
+        coroutineScope.launch(Dispatchers.IO) {
+            matrixDao.clearAllTasks()
         }
     }
 }
