@@ -22,33 +22,35 @@ fun MatrixView(
     matrix: Matrix,
     determinant: Boolean = false
 ) {
+    val lineColor = MaterialTheme.colorScheme.onBackground
+
     Box(
         modifier = Modifier
             .drawBehind {
                 if(!determinant) {
                     drawLine(
-                        color = Color.Black,
+                        color = lineColor,
                         start = Offset(0f, 0f),
                         end = Offset(16f, 0f),
                         strokeWidth = 2.dp.toPx()
                     )
 
                     drawLine(
-                        color = Color.Black,
+                        color = lineColor,
                         start = Offset(0f, size.height),
                         end = Offset(16f, size.height),
                         strokeWidth = 2.dp.toPx()
                     )
 
                     drawLine(
-                        color = Color.Black,
+                        color = lineColor,
                         start = Offset(size.width, 0f),
                         end = Offset(size.width - 16f, 0f),
                         strokeWidth = 2.dp.toPx()
                     )
 
                     drawLine(
-                        color = Color.Black,
+                        color = lineColor,
                         start = Offset(size.width, size.height),
                         end = Offset(size.width - 16f, size.height),
                         strokeWidth = 2.dp.toPx()
@@ -56,14 +58,14 @@ fun MatrixView(
                 }
 
                 drawLine(
-                    color = Color.Black,
+                    color = lineColor,
                     start = Offset(0f, 2f),
                     end = Offset(0f, size.height - 2f),
                     strokeWidth = 2.dp.toPx()
                 )
 
                 drawLine(
-                    color = Color.Black,
+                    color = lineColor,
                     start = Offset(size.width, 2f),
                     end = Offset(size.width, size.height - 2f),
                     strokeWidth = 2.dp.toPx()

@@ -39,6 +39,7 @@ import com.example.highermathapp_sic.ui.components.MatrixEditor
 import com.example.highermathapp_sic.ui.components.MatrixView
 import com.example.highermathapp_sic.ui.components.NumberInputField
 import androidx.compose.ui.graphics.Color
+import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @Composable
 fun MatrixInverse(
@@ -47,9 +48,11 @@ fun MatrixInverse(
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Обратная матрица"
+        title = "Обратная матрица",
+        onPrevious = "MatrixMinor",
+        onNext = "MatrixCramerRule"
     ) {
-        Text("Inverse")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixinverse.txt")
         TaskMatrixInverse(vm)
     }
 }
@@ -81,7 +84,8 @@ fun TaskMatrixInverse(vm: TaskViewModel) {
         val isUserAnswerCorrect = isDetCorrect && isInverseMatrixCorrect && isMinorsCorrect && inverseDetCorrect
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(8.dp)
         ) {
             Text("Найдите обратную матрицу:", style = MaterialTheme.typography.titleLarge)
 
@@ -180,6 +184,8 @@ fun InverseMatrixInput(
     isAnswerCorrect: Boolean?,
     correctAnswer: Matrix
 ) {
+    val color = MaterialTheme.colorScheme.onBackground
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -207,7 +213,7 @@ fun InverseMatrixInput(
                 modifier = Modifier
                     .width(44.dp),
                 thickness = 2.dp,
-                color = Color.Black
+                color = color
             )
 
             NumberInputField(

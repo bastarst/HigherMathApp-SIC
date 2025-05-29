@@ -37,6 +37,7 @@ import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.MatrixEditor
 import com.example.highermathapp_sic.ui.components.MatrixInput
 import com.example.highermathapp_sic.ui.components.NumberInputField
+import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,9 +47,11 @@ fun MatrixCramerRule(
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "СЛАУ. Метод Крамера"
+        title = "СЛАУ. Метод Крамера",
+        onPrevious = "MatrixInverse",
+        onNext = "MainScreen"
     ) {
-        Text("TEXT")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "cramersrule.txt")
         TaskCramerRule(vm)
     }
 }
@@ -88,8 +91,11 @@ fun TaskCramerRule(vm: TaskViewModel) {
             userAnswers[6].value == detA
         )
 
+        val color = MaterialTheme.colorScheme.onBackground
+
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(8.dp)
         ) {
             Text("Решите СЛАУ (Ответ не сокращать):", style = MaterialTheme.typography.titleLarge)
 
@@ -149,7 +155,7 @@ fun TaskCramerRule(vm: TaskViewModel) {
                             modifier = Modifier
                                 .width(44.dp),
                             thickness = 2.dp,
-                            color = Color.Black
+                            color = color
                         )
 
                         NumberInputField(

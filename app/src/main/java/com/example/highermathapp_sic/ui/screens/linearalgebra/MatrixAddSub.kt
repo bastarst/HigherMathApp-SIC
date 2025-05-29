@@ -38,6 +38,8 @@ import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.MathAppTopBar
 import com.example.highermathapp_sic.ui.components.MatrixInput
 import com.example.highermathapp_sic.ui.components.MatrixView
+import com.example.highermathapp_sic.ui.components.TaskSection
+import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,14 +49,15 @@ fun MatrixAddSub(
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Матрицы. Сложение и вычитание"
+        title = "Матрицы. Сложение и вычитание",
+        onPrevious = "MainScreen",
+        onNext = "MatrixMul"
     ) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = "LA TEST 1",
-        )
-        TaskMatrixAdd(vm)
-        TaskMatrixSub(vm)
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixaddsub.txt")
+        TaskSection("Сложите матрицы:") {
+            TaskMatrixAdd(vm)
+            TaskMatrixSub(vm)
+        }
     }
 }
 

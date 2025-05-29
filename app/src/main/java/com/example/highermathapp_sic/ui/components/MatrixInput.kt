@@ -136,9 +136,9 @@ fun MatrixSizeGrid(
     var selectedCols = remember { mutableIntStateOf(1) }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        for (row in 1..4) {
+        for (row in 1..3) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                for (col in 1..4) {
+                for (col in 1..3) {
                     val isSelected = row <= selectedRows.intValue && col <= selectedCols.intValue
                     Box(
                         modifier = Modifier
@@ -174,6 +174,8 @@ fun MatrixEditor(
         )
     }
 
+    val textColor = MaterialTheme.colorScheme.onBackground
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         repeat(rows) { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -182,7 +184,7 @@ fun MatrixEditor(
                         modifier = Modifier
                             .border(
                                 width = 1.dp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .padding(4.dp)
@@ -197,7 +199,10 @@ fun MatrixEditor(
                                     matrixState.value = toMatrix(matrix)
                                 }
                             },
-                            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                            textStyle = LocalTextStyle.current.copy(
+                                textAlign = TextAlign.Center,
+                                color = textColor
+                            ),
                             singleLine = true,
                             readOnly = isAnswerCorrect == true
                         )

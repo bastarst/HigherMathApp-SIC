@@ -1,9 +1,13 @@
 package com.example.highermathapp_sic.ui.screens.linearalgebra
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.highermathapp_sic.data.TaskGroup
 import com.example.highermathapp_sic.data.TaskType
@@ -13,6 +17,7 @@ import com.example.highermathapp_sic.model.TaskContentConverter
 import com.example.highermathapp_sic.ui.components.BaseScreenLayout
 import com.example.highermathapp_sic.ui.components.MatrixView
 import com.example.highermathapp_sic.ui.components.SimpleQuestionTask
+import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @Composable
 fun MatrixMinor(
@@ -21,9 +26,11 @@ fun MatrixMinor(
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Матрицы. Минор"
+        title = "Матрицы. Минор",
+        onPrevious = "MatrixDet",
+        onNext = "MatrixInverse"
     ) {
-        Text("MINOR")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixminor.txt")
         TaskMatrixMinor(vm)
     }
 }
@@ -40,17 +47,19 @@ fun TaskMatrixMinor(vm: TaskViewModel) {
         val (minor, matrix) = TaskContentConverter.decodeMinor(taskEntity.taskContent!!)
         val correctAnswer = matrix.minor(minor.first, minor.second).toString()
 
-        SimpleQuestionTask(
-            correctAnswer = correctAnswer,
-            vm = vm,
-            taskGroup = taskEntity.taskGroup!!,
-            taskType = taskEntity.taskType!!
-        ) {
-            Text(
-                text = "Найдите M(${minor.first + 1}, ${minor.second + 1}) матрицы матрицы:",
-                style = MaterialTheme.typography.titleLarge
-            )
-            MatrixView(matrix)
+        Row(modifier = Modifier.padding(8.dp)) {
+            SimpleQuestionTask(
+                correctAnswer = correctAnswer,
+                vm = vm,
+                taskGroup = taskEntity.taskGroup!!,
+                taskType = taskEntity.taskType!!
+            ) {
+                Text(
+                    text = "Найдите M(${minor.first + 1}, ${minor.second + 1}) матрицы матрицы:",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                MatrixView(matrix)
+            }
         }
     }
 }

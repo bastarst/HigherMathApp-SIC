@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -20,11 +21,13 @@ fun NumberInputField(
     isAnswerCorrect: Boolean?,
     correctAnswer: String
 ) {
+    val color = MaterialTheme.colorScheme.onBackground
+
     Box(
         modifier = Modifier
             .border(
                 width = 1.dp,
-                color = Color.Black,
+                color = color,
                 shape = RoundedCornerShape(4.dp)
             )
             .padding(4.dp)
@@ -38,7 +41,10 @@ fun NumberInputField(
                     userInput.value = userAnswer
                 }
             },
-            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+            textStyle = LocalTextStyle.current.copy(
+                textAlign = TextAlign.Center,
+                color = color
+            ),
             singleLine = true,
             readOnly = isAnswerCorrect == true
         )

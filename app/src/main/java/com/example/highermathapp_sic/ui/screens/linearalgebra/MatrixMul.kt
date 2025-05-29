@@ -31,6 +31,8 @@ import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.MathAppTopBar
 import com.example.highermathapp_sic.ui.components.MatrixInput
 import com.example.highermathapp_sic.ui.components.MatrixView
+import com.example.highermathapp_sic.ui.components.TaskSection
+import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,12 +42,16 @@ fun MatrixMul(
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Матрицы. Умножение"
+        title = "Матрицы. Умножение",
+        onPrevious = "MatrixAddSub",
+        onNext = "MatrixDet"
     ) {
-        Text("LA TEST 2")
-        TaskMulMatrixByNum(vm)
-        TaskMulMatrixByMatrix1(vm)
-        TaskMulMatrixByMatrix2(vm)
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixmul.txt")
+        TaskSection("Решите:") {
+            TaskMulMatrixByNum(vm)
+            TaskMulMatrixByMatrix1(vm)
+            TaskMulMatrixByMatrix2(vm)
+        }
     }
 }
 

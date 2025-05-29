@@ -21,21 +21,27 @@ import androidx.navigation.NavController
 fun BaseScreenLayout(
     navController: NavController,
     title: String,
+    onPrevious: String = "",
+    onNext: String = "",
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
         topBar = { MathAppTopBar(title, navController) },
-        containerColor = Color.White
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(2.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             content()
+            NavigationButtons(
+                navController,
+                onPrevious,
+                onNext
+            )
         }
     }
 }

@@ -23,6 +23,8 @@ import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.MatrixView
 import com.example.highermathapp_sic.ui.components.NumberInputField
 import com.example.highermathapp_sic.ui.components.SimpleQuestionTask
+import com.example.highermathapp_sic.ui.components.TaskSection
+import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @Composable
 fun MatrixDet(
@@ -31,11 +33,15 @@ fun MatrixDet(
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Матрицы. Определитель"
+        title = "Матрицы. Определитель",
+        onPrevious = "MatrixMul",
+        onNext = "MatrixMinor"
     ) {
-        Text("LA TEST 2")
-        TaskMatrixDet2X2(vm)
-        TaskMatrixDet3X3(vm)
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixdet.txt")
+        TaskSection("Найдите определитель матриц:") {
+            TaskMatrixDet2X2(vm)
+            TaskMatrixDet3X3(vm)
+        }
     }
 }
 

@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="HigherMathApp-SIC">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-20T18:20:01.312760900Z">
+        <DropdownSelection timestamp="2025-05-29T15:33:48.128883600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\d\.android\avd\Pixel_9_Pro_XL.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\d\.android\avd\Pixel_9_Pro.avd" />
             </handle>
           </Target>
         </DropdownSelection>
