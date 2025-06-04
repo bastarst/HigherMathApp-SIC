@@ -1,7 +1,5 @@
 package com.example.highermathapp_sic.model
 
-import kotlin.collections.joinToString
-
 object TaskContentConverter {
     private const val SEPARATOR = "|"
 
@@ -51,5 +49,9 @@ object TaskContentConverter {
             numbs[3], numbs[5]
         ))
         return Triple(matrixA, matrixB, matrixC)
+    }
+
+    fun decodeList(taskContent: String): List<Int> {
+        return taskContent.split(",").map { it.trim().toInt() }
     }
 }

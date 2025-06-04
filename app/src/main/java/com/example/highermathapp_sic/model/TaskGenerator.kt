@@ -1,6 +1,5 @@
 package com.example.highermathapp_sic.model
 
-import com.example.highermathapp_sic.data.TaskGroup
 import com.example.highermathapp_sic.data.TaskType
 import kotlin.random.Random
 
@@ -17,6 +16,7 @@ object TaskGenerator {
             TaskType.MINOR -> createRandomMinor()
             TaskType.INVERSE -> createRandomMatrixNonZeroDet()
             TaskType.CRAMER_RULE -> createCramerRuleTask()
+            else -> ""
         }
     }
 
@@ -61,5 +61,26 @@ object TaskGenerator {
         } while (matrix.determinant() == 0)
 
         return list.joinToString(",")
+    }
+
+    fun generateCalculusTask(taskType: TaskType): String {
+        return when(taskType) {
+            TaskType.SEQUENCE_LIMIT -> createSortedUniqueIntList(1)
+            TaskType.FUNCTIONAL_LIMIT -> createRandomIntMatrixString(3)
+            TaskType.FUNCTION_ANALYSIS -> createRandomIntMatrixString(4, positive = true)
+            TaskType.INDEFINITE_INTEGRALS -> createRandomIntMatrixString(1, positive = true)
+            TaskType.DEFINITE_INTEGRALS -> createSortedUniqueIntList(4)
+            else -> ""
+        }
+    }
+
+    private fun createRandomIntMatrixString(size: Int, positive: Boolean = false): String {
+        val list = List(size) { if(positive) Random.nextInt(1, 6) else Random.nextInt(-5, 6)}
+        return list.joinToString(",")
+    }
+
+    private fun createSortedUniqueIntList(size: Int): String {
+        val range = 0..10
+        return range.shuffled().take(size).sorted().joinToString(",")
     }
 }

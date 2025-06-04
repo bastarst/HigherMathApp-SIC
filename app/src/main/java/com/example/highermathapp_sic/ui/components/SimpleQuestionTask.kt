@@ -3,13 +3,6 @@ package com.example.highermathapp_sic.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,7 +24,7 @@ fun SimpleQuestionTask(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val taskList = vm.taskList.observeAsState(listOf())
-    val taskEntity = taskList.value.lastOrNull() {
+    val taskEntity = taskList.value.lastOrNull {
         it.taskGroup == taskGroup
         it.taskType == taskType
     }!!
@@ -59,7 +52,8 @@ fun SimpleQuestionTask(
 
         isCorrect?.let {
             Text(
-                text = if (it) "✅ Ответ верный" else "❌ Ответ неверный"
+                text = if (it) "✅ Ответ верный" else "❌ Ответ неверный",
+                style = MaterialTheme.typography.titleLarge
             )
         }
     }

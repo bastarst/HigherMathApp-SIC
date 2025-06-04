@@ -18,13 +18,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.highermathapp_sic.data.TaskGroup
 import com.example.highermathapp_sic.data.TaskType
@@ -35,7 +30,6 @@ import com.example.highermathapp_sic.ui.components.BaseScreenLayout
 import com.example.highermathapp_sic.ui.components.CheckButton
 import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.MatrixEditor
-import com.example.highermathapp_sic.ui.components.MatrixInput
 import com.example.highermathapp_sic.ui.components.NumberInputField
 import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
@@ -49,9 +43,9 @@ fun MatrixCramerRule(
         navController = navController,
         title = "СЛАУ. Метод Крамера",
         onPrevious = "MatrixInverse",
-        onNext = "MainScreen"
+        onNext = "SequenceLimits"
     ) {
-        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "cramersrule.txt")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "cramer_rule.txt")
         TaskCramerRule(vm)
     }
 }
@@ -61,13 +55,13 @@ fun TaskCramerRule(vm: TaskViewModel) {
     val taskList = vm.taskList.observeAsState(listOf())
 
     if(!taskList.value.isEmpty()) {
-        val taskEntity = taskList.value.lastOrNull() {
+        val taskEntity = taskList.value.lastOrNull {
             it.taskGroup == TaskGroup.LINEAR_ALGEBRA
             it.taskType == TaskType.CRAMER_RULE
         }!!
         val isAnswerCorrect = taskEntity.isAnswerCorrect
         val slau = taskEntity.taskContent!!.split(",")
-        val (matrixA, matrixB, matrixC) = TaskContentConverter.decodeCramerRule(taskEntity.taskContent!!)
+        val (matrixA, matrixB, matrixC) = TaskContentConverter.decodeCramerRule(taskEntity.taskContent)
         val matrixList = listOf<Matrix>(matrixA, matrixB, matrixC)
         val detA = matrixA.determinant().toString()
         val detB = matrixB.determinant().toString()
@@ -181,25 +175,27 @@ fun TaskCramerRule(vm: TaskViewModel) {
 
 @Composable
 fun SLAUView(list: List<String>) {
+    val color = MaterialTheme.colorScheme.onBackground
+
     Box(
         modifier = Modifier
             .drawBehind {
                 drawLine(
-                    color = Color.Black,
+                    color = color,
                     start = Offset(0f, 0f),
                     end = Offset(0f, size.height),
                     strokeWidth = 2.dp.toPx()
                 )
 
                 drawLine(
-                    color = Color.Black,
+                    color = color,
                     start = Offset(0f, 0f),
                     end = Offset(16f, 0f),
                     strokeWidth = 2.dp.toPx()
                 )
 
                 drawLine(
-                    color = Color.Black,
+                    color = color,
                     start = Offset(0f, size.height),
                     end = Offset(16f, size.height),
                     strokeWidth = 2.dp.toPx()

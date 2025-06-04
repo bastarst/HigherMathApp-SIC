@@ -5,38 +5,38 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TaskRepository(private val matrixDao: TaskDao) {
+class TaskRepository(private val taskDao: TaskDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    val tasks: LiveData<List<TaskEntity>> = matrixDao.getAllTaskEntity()
+    val tasks: LiveData<List<TaskEntity>> = taskDao.getAllTaskEntity()
 
     fun addTask(task: TaskEntity) {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.insertTask(task)
+            taskDao.insertTask(task)
         }
     }
 
     fun removeTask(id: Int) {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.deleteTask(id)
+            taskDao.deleteTask(id)
         }
     }
 
     fun updateAnswerCorrect(id: Int, isCorrect: Boolean) {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.updateIsAnswerCorrect(id, isCorrect)
+            taskDao.updateIsAnswerCorrect(id, isCorrect)
         }
     }
 
     fun updateTask(id: Int, taskContent: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.updateTask(id, taskContent)
+            taskDao.updateTask(id, taskContent)
         }
     }
 
     fun clearAllTasks() {
         coroutineScope.launch(Dispatchers.IO) {
-            matrixDao.clearAllTasks()
+            taskDao.clearAllTasks()
         }
     }
 }

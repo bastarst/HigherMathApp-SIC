@@ -9,18 +9,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.highermathapp_sic.data.TaskEntity
 import com.example.highermathapp_sic.data.TaskGroup
 import com.example.highermathapp_sic.data.TaskType
 import com.example.highermathapp_sic.data.TaskViewModel
@@ -38,7 +33,6 @@ import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.MatrixEditor
 import com.example.highermathapp_sic.ui.components.MatrixView
 import com.example.highermathapp_sic.ui.components.NumberInputField
-import androidx.compose.ui.graphics.Color
 import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @Composable
@@ -52,7 +46,7 @@ fun MatrixInverse(
         onPrevious = "MatrixMinor",
         onNext = "MatrixCramerRule"
     ) {
-        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixinverse.txt")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrix_inverse.txt")
         TaskMatrixInverse(vm)
     }
 }

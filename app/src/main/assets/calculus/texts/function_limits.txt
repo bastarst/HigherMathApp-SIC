@@ -1,0 +1,41 @@
+**Что такое предел функции?**
+Предел функции $f(x)$ в точке $x_0$ — это число $L$, к которому значения функции $f(x)$ стремятся, когда $x$ приближается к $xₒ$ (но $x ≠ x_0$).
+Обозначается:
+[formula, lim] x, xₒ, f(x) [formula, other] = L
+
+**Формальное определение (по Коши)**
+Предел функции $f(x)$ в точке $x_0$ равен $L$, если для любого $ε > 0$ существует такое $δ > 0$, что для всех $x$, удовлетворяющих
+[formula, other] 0 < |x - xₒ| < δ
+выполняется неравенство
+[formula, other] |f(x) - L| < ε
+
+**Односторонние пределы**
+ • **Предел слева:**
+[formula, lim] x, x⁻ₒ, f(x) [formula, other] = [formula, other] L₋
+означает, что $x$ приближается к $xₒ$ слева (с меньших значений).
+ • **Предел справа:**
+[formula, lim] x, x⁺ₒ, f(x) [formula, other] = [formula, other] L₊
+означает, что $x$ приближается к $xₒ$ справа (с больших значений).
+Предел в точке существует, если
+[formula, other] L₋ = L₊ = L
+
+**Примеры**
+Пример 1:
+[formula, other] f(x) = 2x + 1
+[formula, lim] x, 3, 2x + 1 [formula, other] = 2 • 3 + 1 = 7
+
+Пример 2:
+[formula, fraction] f(x), x² - 1, x - 1
+При $x → 1$ функция не определена (деление на ноль), но
+[formula, lim] x, 1, x² - 1, x - 1 [formula, other] = [formula, lim] x, 1, (x - 1)(x + 1), x - 1 [formula, other] =
+[formula, other] = [formula, lim] x, 1, x + 1 [formula, other] = 2
+
+**Свойства пределов функций**
+Пусть существуют пределы:
+[formula, lim] x, xₒ, f(x) [formula, other] = A [formula, lim] x, xₒ, g(x) [formula, other] = B
+Тогда:
+[formula, lim] x, xₒ, f(x) +/- g(x) [formula, other] = A +/- B
+[formula, lim] x, xₒ, c • f(x) [formula, other] = c • A для числа c
+[formula, lim] x, xₒ, [f(x) • g(x)] [formula, other] = A • B
+Если $B ≠ 0$, то
+[formula, lim] x, xₒ, f(x), g(x) [formula, other] = [formula, fraction] A, B

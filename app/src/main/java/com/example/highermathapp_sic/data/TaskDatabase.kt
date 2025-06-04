@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 @Database(entities = [TaskEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class TaskDatabase : RoomDatabase() {
-    abstract fun matrixDao(): TaskDao
+    abstract fun taskDao(): TaskDao
 
     companion object {
         private var INSTANCE: TaskDatabase? = null

@@ -6,27 +6,37 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 
+data class TaskGroupStats(
+    val taskGroup: TaskGroup,
+    val correctCount: Int
+)
+
+data class TaskGroupTotalStats(
+    val taskGroup: TaskGroup,
+    val totalCount: Int
+)
+
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM matrix_entity")
+    @Query("SELECT * FROM task_entity")
     fun getAllTaskEntity(): LiveData<List<TaskEntity>>
 
     @Insert
     fun insertTask(task: TaskEntity)
 
-    @Query("DELETE FROM matrix_entity WHERE id = :id")
+    @Query("DELETE FROM task_entity WHERE id = :id")
     fun deleteTask(id: Int)
 
-    @Query("UPDATE matrix_entity SET isAnswerCorrect = :isCorrect WHERE id = :id")
+    @Query("UPDATE task_entity SET isAnswerCorrect = :isCorrect WHERE id = :id")
     fun updateIsAnswerCorrect(id: Int, isCorrect: Boolean)
 
-    @Query("UPDATE matrix_entity SET taskContent = :taskContent, isAnswerCorrect = null WHERE id = :id")
+    @Query("UPDATE task_entity SET taskContent = :taskContent, isAnswerCorrect = null WHERE id = :id")
     fun updateTask(id: Int, taskContent: String)
 
     @Query("DELETE FROM sqlite_sequence WHERE name = 'matrix_entity'")
     fun resetIdSequence()
 
-    @Query("DELETE FROM matrix_entity")
+    @Query("DELETE FROM task_entity")
     fun clearAll()
 
     @Transaction
@@ -34,4 +44,19 @@ interface TaskDao {
         clearAll()
         resetIdSequence()
     }
+
+    @Query("""
+        SELECT taskGroup, COUNT(*) as correctCount 
+        FROM task_entity 
+        WHERE isAnswerCorrect = 1 
+        GROUP BY taskGroup
+    """)
+    fun getCorrectAnswersCountPerGroup(): LiveData<List<TaskGroupStats>>
+
+    @Query("""
+        SELECT taskGroup, COUNT(*) as totalCount 
+        FROM task_entity 
+        GROUP BY taskGroup
+    """)
+    fun getTotalTasksPerGroup(): LiveData<List<TaskGroupTotalStats>>
 }

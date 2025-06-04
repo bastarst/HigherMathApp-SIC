@@ -46,7 +46,7 @@ fun MatrixMul(
         onPrevious = "MatrixAddSub",
         onNext = "MatrixDet"
     ) {
-        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixmul.txt")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrix_mul.txt")
         TaskSection("Решите:") {
             TaskMulMatrixByNum(vm)
             TaskMulMatrixByMatrix1(vm)

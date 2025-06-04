@@ -1,10 +1,8 @@
 package com.example.highermathapp_sic.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +11,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,12 +36,11 @@ fun NavScreen(
             "6. СЛАУ. Метод Крамера" to "MatrixCramerRule"
         ),
         "Математический анализ" to listOf(
-            "3" to "CFirstScreen",
-            "4" to "CSecondScreen"
-        ),
-        "Дифференциальные уравнения" to listOf(
-            "5" to "DEFirstScreen",
-            "6" to "DESecondScreen"
+            "1. Предел последовательности" to "SequenceLimits",
+            "2. Предел функции" to "FunctionLimits",
+            "3. Исследование функции" to "FunctionAnalysis",
+            "4. Неопределённый интеграл" to "IndefiniteIntegrals",
+            "5. Определённый интеграл" to "DefiniteIntegrals"
         )
     )
 

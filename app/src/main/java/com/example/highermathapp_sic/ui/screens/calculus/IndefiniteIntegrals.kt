@@ -1,4 +1,4 @@
-package com.example.highermathapp_sic.ui.screens.linearalgebra
+package com.example.highermathapp_sic.ui.screens.calculus
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -12,54 +12,54 @@ import androidx.navigation.NavController
 import com.example.highermathapp_sic.data.TaskGroup
 import com.example.highermathapp_sic.data.TaskType
 import com.example.highermathapp_sic.data.TaskViewModel
-import com.example.highermathapp_sic.model.Matrix
 import com.example.highermathapp_sic.model.TaskContentConverter
 import com.example.highermathapp_sic.ui.components.BaseScreenLayout
-import com.example.highermathapp_sic.ui.components.MatrixView
+import com.example.highermathapp_sic.ui.components.IntegralView
 import com.example.highermathapp_sic.ui.components.SimpleQuestionTask
 import com.example.highermathapp_sic.ui.components.TheoreticalPart
 
 @Composable
-fun MatrixMinor(
+fun IndefiniteIntegrals(
     navController: NavController,
     vm: TaskViewModel
 ) {
     BaseScreenLayout(
         navController = navController,
-        title = "Матрицы. Минор",
-        onPrevious = "MatrixDet",
-        onNext = "MatrixInverse"
+        title = "Неопределённый интеграл",
+        onPrevious = "FunctionAnalysis",
+        onNext = "DefiniteIntegrals"
     ) {
-        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrix_minor.txt")
-        TaskMatrixMinor(vm)
+        TheoreticalPart(TaskGroup.CALCULUS, "indefinite_integrals.txt")
+        IndefiniteIntegralsTasks(vm)
     }
 }
 
 @Composable
-fun TaskMatrixMinor(vm: TaskViewModel) {
+fun IndefiniteIntegralsTasks(vm: TaskViewModel) {
     val taskList = vm.taskList.observeAsState(listOf())
 
     if(!taskList.value.isEmpty()) {
         val taskEntity = taskList.value.lastOrNull {
-            it.taskGroup == TaskGroup.LINEAR_ALGEBRA
-            it.taskType == TaskType.MINOR
+            it.taskGroup == TaskGroup.CALCULUS
+            it.taskType == TaskType.INDEFINITE_INTEGRALS
         }!!
-        val (minor, matrix) = TaskContentConverter.decodeMinor(taskEntity.taskContent!!)
-        val correctAnswer = matrix.minor(minor.first, minor.second).toString()
+        val list = TaskContentConverter.decodeList(taskEntity.taskContent!!)
+        val num = list[0] + 1
+        val correctAnswer = "x^${num} + C"
 
         Row(modifier = Modifier.padding(8.dp)) {
             SimpleQuestionTask(
                 correctAnswer = correctAnswer,
                 vm = vm,
-                taskGroup = taskEntity.taskGroup!!,
-                taskType = taskEntity.taskType!!
+                taskGroup = TaskGroup.CALCULUS,
+                taskType = TaskType.INDEFINITE_INTEGRALS
             ) {
                 Text(
-                    text = "Найдите M(${minor.first + 1}, ${minor.second + 1}) матрицы матрицы:",
+                    text = "Решите (Для степени используйте '^'):",
                     style = MaterialTheme.typography.titleLarge
                 )
 
-                MatrixView(matrix)
+                IntegralView("${num}x^${num - 1} dx")
             }
         }
     }

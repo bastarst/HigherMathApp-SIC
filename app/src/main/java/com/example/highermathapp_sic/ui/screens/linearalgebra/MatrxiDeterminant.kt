@@ -37,7 +37,7 @@ fun MatrixDet(
         onPrevious = "MatrixMul",
         onNext = "MatrixMinor"
     ) {
-        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrixdet.txt")
+        TheoreticalPart(TaskGroup.LINEAR_ALGEBRA, "matrix_det.txt")
         TaskSection("Найдите определитель матриц:") {
             TaskMatrixDet2X2(vm)
             TaskMatrixDet3X3(vm)

@@ -1,0 +1,48 @@
+**Что такое неопределённый интеграл?**
+**Неопределённый интеграл** функции — это операция, обратная взятию производной. То есть, если:
+[formula, other] F'(x) = f(x),
+то $F(x)$ называется **первообразной** функции $f(x)$, и обозначается:
+[formula, integral] f(x)dx [formula, other] = F(x) + C
+где $C$ — **произвольная постоянная** (так как производная от константы равна нулю).
+
+**Пример**
+[formula, integral] x²dx [formula, fraction] x³, 3 [formula, other] + C
+Проверка:
+[formula, other] ( [formula, fraction] x³, 3 [formula, other] + C )' = x²
+
+**Правила интегрирования**
+**1. Линейность**
+[formula, integral] (af(x) + bg(x))dx [formula, other] =
+[formula, other] = a [formula, integral] f(x)fx [formula, other] + b [formula, integral] g(x)dx
+где $a, b$ — константы
+
+**2. Таблица основных интегралов**
+[table]
+|Функция f(x)|Интеграл ∫ f(x)fx|
+|k|kx + C|
+|xⁿ, n ≠ -1|[formula, fraction] xⁿ⁺¹, n + 1 [formula, other] + C|
+|[formula, fraction] 1, x|ln(x) + C|
+|sin(x)|-cos(x) + C|
+|cos(x)|sin(x) + C|
+|eˣ|eˣ + C|
+|[formula, fraction] 1, cos²(x)|tg(x) + C|
+|[formula, fraction] 1, sin²(x)|-ctg(x) + C|
+|[formula, fraction] 1, √(x² ± A)|ln(x + √(x² ± A)) + C|
+|[formula, fraction] 1, √(a² - x²)|[formula, other] arcsin([formula, fraction] x, a [formula, other]) + C|
+|[formula, fraction] 1, √(1 - x²)|arcsin(x) + C|
+|[formula, fraction] 1, x² - a²|[formula, fraction] 1, 2a [formula, other] ln([formula, fraction] x - a, x + a [formula, other]) + C|
+|[formula, fraction] 1, x² + a²|[formula, fraction] 1, a [formula, other] arctg([formula, fraction] x, a [formula, other]) + C|
+|[formula, fraction] 1, x² + 1|arctg(x) + C|
+[table]
+**3. Интегрирование сложной функции (замена переменной)**
+Если $f(g(x)) • g'(x)$ — подынтегральное выражение, то удобно сделать замену:
+[formula, integral] f(g(x)) • g'(x)dx = [formula, integral] f(u)du
+
+**Примеры**
+Пример 1:
+[formula, integral] (3x² + 4x)dx = x³ + 2x² + C
+Пример 2 (с заменой переменной):
+[formula, integral] cos(2x)dx
+Пусть $u = 2x$, тогда $du = 2dx$, $dx = 0.5(du)$
+[formula, integral] cos(2x)dx = [formula, fraction] 1, 2 [formula, integral] cos(u)du =
+[formula, other] = [formula, fraction] 1, 2 [formula, other] sin(u) + C = [formula, fraction] 1, 2 [formula, other] sin(2x) + C
