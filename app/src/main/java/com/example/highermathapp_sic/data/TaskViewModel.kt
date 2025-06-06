@@ -9,7 +9,9 @@ class TaskViewModel(application: Application) : ViewModel() {
     val taskList: LiveData<List<TaskEntity>>
     val correctStats: LiveData<List<TaskGroupStats>>
     val taskGroupTotalStats: LiveData<List<TaskGroupTotalStats>>
+    val taskTypeStatusList: LiveData<List<TaskTypeStatus>>
     private val repository: TaskRepository
+    private var initialized = false
 
     init {
         val taskDb = TaskDatabase.getInstance(application)
@@ -18,9 +20,11 @@ class TaskViewModel(application: Application) : ViewModel() {
         taskList = repository.tasks
         correctStats = taskDao.getCorrectAnswersCountPerGroup()
         taskGroupTotalStats = taskDao.getTotalTasksPerGroup()
+        taskTypeStatusList = taskDao.getAllTaskTypeStatus()
         taskList.observeForever { list ->
-            if (list.isNullOrEmpty()) {
+            if (!initialized && list.isNullOrEmpty()) {
                 initialTaskDataBase()
+                initialized = true
             }
         }
     }
@@ -45,10 +49,13 @@ class TaskViewModel(application: Application) : ViewModel() {
 
     private fun initialCalculusDataBase() {
         addCalculusTask(TaskType.SEQUENCE_LIMIT)
-        addCalculusTask(TaskType.FUNCTIONAL_LIMIT)
-        addCalculusTask(TaskType.FUNCTION_ANALYSIS)
+        addCalculusTask(TaskType.FUNCTIONAL_LIMIT_1)
+        addCalculusTask(TaskType.FUNCTIONAL_LIMIT_2)
+        addCalculusTask(TaskType.FUNCTION_ANALYSIS_1)
+        addCalculusTask(TaskType.FUNCTION_ANALYSIS_2)
         addCalculusTask(TaskType.INDEFINITE_INTEGRALS)
-        addCalculusTask(TaskType.DEFINITE_INTEGRALS)
+        addCalculusTask(TaskType.DEFINITE_INTEGRALS_1)
+        addCalculusTask(TaskType.DEFINITE_INTEGRALS_2)
     }
 
     fun updateTask(taskEntity: TaskEntity) {

@@ -20,6 +20,7 @@ import com.example.highermathapp_sic.ui.components.NumberInputField
 import com.example.highermathapp_sic.ui.components.TaskSection
 import com.example.highermathapp_sic.ui.components.TheoreticalPart
 import kotlin.math.abs
+import kotlin.math.round
 
 @Composable
 fun FunctionAnalysis(
@@ -42,25 +43,30 @@ fun FunctionAnalysisTasks(vm: TaskViewModel) {
     val taskList = vm.taskList.observeAsState(listOf())
 
     if(!taskList.value.isEmpty()) {
-        val taskEntity = taskList.value.lastOrNull {
+        val taskEntity1 = taskList.value.lastOrNull {
             it.taskGroup == TaskGroup.CALCULUS
-            it.taskType == TaskType.FUNCTION_ANALYSIS
+            it.taskType == TaskType.FUNCTION_ANALYSIS_1
         }!!
-        val list = TaskContentConverter.decodeList(taskEntity.taskContent!!)
-        val isAnswerCorrect = taskEntity.isAnswerCorrect
+        val taskEntity2 = taskList.value.lastOrNull {
+            it.taskGroup == TaskGroup.CALCULUS
+            it.taskType == TaskType.FUNCTION_ANALYSIS_2
+        }!!
+        val list = TaskContentConverter.decodeList(taskEntity1.taskContent!!) +
+                TaskContentConverter.decodeList(taskEntity2.taskContent!!)
+        val isAnswerCorrect1 = taskEntity1.isAnswerCorrect
+        val isAnswerCorrect2 = taskEntity2.isAnswerCorrect
         val userInput = rememberSaveable {
             List(3) { mutableStateOf("") }
         }
-        val correctAnswer1: Int = -list[1] / (list[0] * 2)
-        val correctAnswer2: Int = -list[3] / (list[2] * 2)
-        val checkAnswer = listOf<Boolean>(
+        val correctAnswer1 = round((-list[1].toDouble() / (list[0] * 2)) * 10) / 10
+        val correctAnswer2 = round((-list[3].toDouble() / (list[2] * 2)) * 10) / 10
+        val checkAnswer1 = listOf<Boolean>(
             userInput[0].value == "(-Inf, ${correctAnswer1})",
-            userInput[1].value == "(${correctAnswer1}, Inf)",
-            userInput[2].value == correctAnswer2.toString()
+            userInput[1].value == "(${correctAnswer1}, Inf)"
         )
 
         TaskSection(
-            task = "1. Найдите интервал возрастания и убывания (Вместо ∞ используете 'Inf', в ответ напишите только целую часть): \n" +
+            task = "1. Найдите интервал возрастания и убывания (Вместо ∞ используете 'Inf'. Ответ окргулите до десятых): \n" +
                     "f(x) = ${list[0]}x²" + if (list[1] < 0) " - ${abs(list[1])}x" else " + ${abs(list[1])}x"
         ) {
             Text(
@@ -69,10 +75,10 @@ fun FunctionAnalysisTasks(vm: TaskViewModel) {
             )
 
             TextField(
-                value = if (isAnswerCorrect == true) "(-Inf, ${correctAnswer1})" else userInput[0].value,
+                value = if (isAnswerCorrect1 == true) "(-Inf, ${correctAnswer1})" else userInput[0].value,
                 onValueChange = { newAnswer -> userInput[0].value = newAnswer },
                 textStyle = MaterialTheme.typography.titleLarge,
-                readOnly = isAnswerCorrect == true
+                readOnly = isAnswerCorrect1 == true
             )
 
             Text(
@@ -81,15 +87,24 @@ fun FunctionAnalysisTasks(vm: TaskViewModel) {
             )
 
             TextField(
-                value = if (isAnswerCorrect == true) "(${correctAnswer1}, Inf)" else userInput[1].value,
+                value = if (isAnswerCorrect1 == true) "(${correctAnswer1}, Inf)" else userInput[1].value,
                 onValueChange = { newAnswer -> userInput[1].value = newAnswer },
                 textStyle = MaterialTheme.typography.titleLarge,
-                readOnly = isAnswerCorrect == true
+                readOnly = isAnswerCorrect1 == true
             )
+
+            CheckButton(
+                vm,
+                taskEntity1,
+                checkAnswer1.all { it },
+                isAnswerCorrect1
+            )
+
+            IsAnswerCorrect(isAnswerCorrect1)
         }
 
         TaskSection(
-            task = "2. Найдите экстремум функции (В ответ напишите только целую часть): \n" +
+            task = "2. Найдите экстремум функции (Ответ окргулите до десятых): \n" +
                     "f(x) = ${list[2]}x²" + if (list[3] < 0) " - ${abs(list[3])}x" else " + ${abs(list[3])}x"
         ) {
             Row {
@@ -100,19 +115,19 @@ fun FunctionAnalysisTasks(vm: TaskViewModel) {
 
                 NumberInputField(
                     userInput = userInput[2],
-                    isAnswerCorrect = isAnswerCorrect,
+                    isAnswerCorrect = isAnswerCorrect2,
                     correctAnswer = correctAnswer2.toString()
                 )
             }
 
             CheckButton(
                 vm,
-                taskEntity,
-                checkAnswer.all { it },
-                isAnswerCorrect
+                taskEntity2,
+                userInput[2].value == correctAnswer2.toString(),
+                isAnswerCorrect2
             )
 
-            IsAnswerCorrect(isAnswerCorrect)
+            IsAnswerCorrect(isAnswerCorrect2)
         }
     }
 }

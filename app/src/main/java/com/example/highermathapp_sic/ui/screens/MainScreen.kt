@@ -115,7 +115,23 @@ fun MainScreen(
             }
         }
     } else {
-        Text("Загрузка...")
+        Scaffold(
+            topBar = { MathAppTopBar("Главный экран", navController) }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(2.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Загрузка...",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+        }
     }
 }
 

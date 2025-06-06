@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.highermathapp_sic.data.TaskEntity
@@ -49,7 +50,9 @@ fun MatrixInput(
     val userMatrix = remember { mutableStateOf(Matrix(1, 1)) }
     val isCorrect = remember { mutableStateOf<Boolean>(false) }
 
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         Button(
             onClick = {
                 showDialog.value = true
@@ -200,7 +203,8 @@ fun MatrixEditor(
                                 color = textColor
                             ),
                             singleLine = true,
-                            readOnly = isAnswerCorrect == true
+                            readOnly = isAnswerCorrect == true,
+                            cursorBrush = SolidColor(textColor)
                         )
                     }
                 }

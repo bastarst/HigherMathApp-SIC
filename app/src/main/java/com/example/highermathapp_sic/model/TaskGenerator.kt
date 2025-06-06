@@ -66,21 +66,24 @@ object TaskGenerator {
     fun generateCalculusTask(taskType: TaskType): String {
         return when(taskType) {
             TaskType.SEQUENCE_LIMIT -> createSortedUniqueIntList(1)
-            TaskType.FUNCTIONAL_LIMIT -> createRandomIntMatrixString(3)
-            TaskType.FUNCTION_ANALYSIS -> createRandomIntMatrixString(4, positive = true)
-            TaskType.INDEFINITE_INTEGRALS -> createRandomIntMatrixString(1, positive = true)
-            TaskType.DEFINITE_INTEGRALS -> createSortedUniqueIntList(4)
+            TaskType.FUNCTIONAL_LIMIT_1 -> createRandomIntListString(1)
+            TaskType.FUNCTIONAL_LIMIT_2 -> createRandomIntListString(2)
+            TaskType.FUNCTION_ANALYSIS_1 -> createSortedUniqueIntList(2, positive = true)
+            TaskType.FUNCTION_ANALYSIS_2 -> createSortedUniqueIntList(2, positive = true)
+            TaskType.INDEFINITE_INTEGRALS -> createRandomIntListString(1, positive = true)
+            TaskType.DEFINITE_INTEGRALS_1 -> createSortedUniqueIntList(2)
+            TaskType.DEFINITE_INTEGRALS_2 -> createSortedUniqueIntList(2)
             else -> ""
         }
     }
 
-    private fun createRandomIntMatrixString(size: Int, positive: Boolean = false): String {
+    private fun createRandomIntListString(size: Int, positive: Boolean = false): String {
         val list = List(size) { if(positive) Random.nextInt(1, 6) else Random.nextInt(-5, 6)}
         return list.joinToString(",")
     }
 
-    private fun createSortedUniqueIntList(size: Int): String {
-        val range = 0..10
+    private fun createSortedUniqueIntList(size: Int, positive: Boolean = false): String {
+        val range = if (positive) 1..10 else 0..10
         return range.shuffled().take(size).sorted().joinToString(",")
     }
 }

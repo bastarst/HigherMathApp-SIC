@@ -16,6 +16,11 @@ data class TaskGroupTotalStats(
     val totalCount: Int
 )
 
+data class TaskTypeStatus(
+    val taskType: TaskType,
+    val isAnswerCorrect: Boolean?
+)
+
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM task_entity")
@@ -59,4 +64,10 @@ interface TaskDao {
         GROUP BY taskGroup
     """)
     fun getTotalTasksPerGroup(): LiveData<List<TaskGroupTotalStats>>
+
+    @Query("""
+        SELECT taskType, isAnswerCorrect
+        FROM task_entity
+    """)
+    fun getAllTaskTypeStatus(): LiveData<List<TaskTypeStatus>>
 }

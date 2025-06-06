@@ -22,7 +22,7 @@ import com.example.highermathapp_sic.ui.components.IsAnswerCorrect
 import com.example.highermathapp_sic.ui.components.NumberInputField
 import com.example.highermathapp_sic.ui.components.TaskSection
 import com.example.highermathapp_sic.ui.components.TheoreticalPart
-import kotlin.collections.all
+import kotlin.math.round
 
 
 @Composable
@@ -46,24 +46,26 @@ fun DefiniteIntegralsTasks(vm: TaskViewModel) {
     val taskList = vm.taskList.observeAsState(listOf())
 
     if(!taskList.value.isEmpty()) {
-        val taskEntity = taskList.value.lastOrNull {
+        val taskEntity1 = taskList.value.lastOrNull {
             it.taskGroup == TaskGroup.CALCULUS
-            it.taskType == TaskType.DEFINITE_INTEGRALS
+            it.taskType == TaskType.DEFINITE_INTEGRALS_1
         }!!
-        val isAnswerCorrect = taskEntity.isAnswerCorrect
-        val list = TaskContentConverter.decodeList(taskEntity.taskContent!!).sorted()
+        val taskEntity2 = taskList.value.lastOrNull {
+            it.taskGroup == TaskGroup.CALCULUS
+            it.taskType == TaskType.DEFINITE_INTEGRALS_2
+        }!!
+        val isAnswerCorrect1 = taskEntity1.isAnswerCorrect
+        val isAnswerCorrect2 = taskEntity2.isAnswerCorrect
+        val list = TaskContentConverter.decodeList(taskEntity1.taskContent!!) +
+                TaskContentConverter.decodeList(taskEntity2.taskContent!!)
         val userInput = rememberSaveable {
             List(2) { mutableStateOf("") }
         }
-        val correctAnswer1: Int = list[1] * list[1] / 2 - list[0] * list[0] / 2
-        val correctAnswer2: Int = list[3] * list[3] - list[2] * list[2]
-        val checkAnswer = listOf<Boolean>(
-            userInput[0].value == correctAnswer1.toString(),
-            userInput[1].value == correctAnswer2.toString()
-        )
+        val correctAnswer1 = round((list[1].toDouble() * list[1] / 2 - list[0].toDouble() * list[0] / 2) * 10) / 10
+        val correctAnswer2 = round((list[3].toDouble() * list[3] - list[2].toDouble() * list[2]) * 10) / 10
 
         TaskSection(
-            task = "1. Решите (В ответ впишите только целую часть):"
+            task = "1. Решите (Ответ округлите до десятых):"
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -73,14 +75,23 @@ fun DefiniteIntegralsTasks(vm: TaskViewModel) {
 
                 NumberInputField(
                     userInput = userInput[0],
-                    isAnswerCorrect = isAnswerCorrect,
+                    isAnswerCorrect = isAnswerCorrect1,
                     correctAnswer = correctAnswer1.toString()
                 )
             }
+
+            CheckButton(
+                vm,
+                taskEntity1,
+                userInput[0].value == correctAnswer1.toString(),
+                isAnswerCorrect1
+            )
+
+            IsAnswerCorrect(isAnswerCorrect1)
         }
 
         TaskSection(
-            task = "2. Найдите площадь под графиком y = 2x от ${list[2]} до ${list[3]}"
+            task = "2. Найдите площадь под графиком y = 2x от ${list[2]} до ${list[3]} (Ответ округлите до десятых)"
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -90,19 +101,19 @@ fun DefiniteIntegralsTasks(vm: TaskViewModel) {
 
                 NumberInputField(
                     userInput = userInput[1],
-                    isAnswerCorrect = isAnswerCorrect,
+                    isAnswerCorrect = isAnswerCorrect2,
                     correctAnswer = correctAnswer2.toString()
                 )
             }
 
             CheckButton(
                 vm,
-                taskEntity,
-                checkAnswer.all { it },
-                isAnswerCorrect
+                taskEntity2,
+                userInput[1].value == correctAnswer2.toString(),
+                isAnswerCorrect2
             )
 
-            IsAnswerCorrect(isAnswerCorrect)
+            IsAnswerCorrect(isAnswerCorrect2)
         }
     }
 }

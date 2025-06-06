@@ -38,12 +38,18 @@ fun FunctionLimitsTasks(vm: TaskViewModel) {
     val taskList = vm.taskList.observeAsState(listOf())
 
     if(!taskList.value.isEmpty()) {
-        val taskEntity = taskList.value.lastOrNull {
+        val taskEntity1 = taskList.value.lastOrNull {
             it.taskGroup == TaskGroup.CALCULUS
-            it.taskType == TaskType.FUNCTIONAL_LIMIT
+            it.taskType == TaskType.FUNCTIONAL_LIMIT_1
         }!!
-        val list = TaskContentConverter.decodeList(taskEntity.taskContent!!)
-        val isAnswerCorrect = taskEntity.isAnswerCorrect
+        val taskEntity2 = taskList.value.lastOrNull {
+            it.taskGroup == TaskGroup.CALCULUS
+            it.taskType == TaskType.FUNCTIONAL_LIMIT_2
+        }!!
+        val list = TaskContentConverter.decodeList(taskEntity1.taskContent!!) +
+                TaskContentConverter.decodeList(taskEntity2.taskContent!!)
+        val isAnswerCorrect1 = taskEntity1.isAnswerCorrect
+        val isAnswerCorrect2 = taskEntity2.isAnswerCorrect
         val userInput = rememberSaveable {
             List(2) { mutableStateOf("") }
         }
@@ -52,10 +58,6 @@ fun FunctionLimitsTasks(vm: TaskViewModel) {
                         abs(list[1]).toString()
         val correctAnswer1 = list[0] * list[0] + list[1]
         val correctAnswer2 = list[2] + 1
-        val checkAnswer = listOf<Boolean>(
-            userInput[0].value == correctAnswer1.toString(),
-            userInput[1].value == correctAnswer2.toString()
-        )
 
         TaskSection(
             task = "Найдите предел:"
@@ -64,27 +66,36 @@ fun FunctionLimitsTasks(vm: TaskViewModel) {
                 approachingValue = list[0].toString(),
                 numerator = numerator,
                 userInput = userInput[0],
-                isAnswerCorrect = isAnswerCorrect,
+                isAnswerCorrect = isAnswerCorrect1,
                 correctAnswer = correctAnswer1.toString()
             )
+
+            CheckButton(
+                vm,
+                taskEntity1,
+                userInput[0].value == correctAnswer1.toString(),
+                isAnswerCorrect1
+            )
+
+            IsAnswerCorrect(isAnswerCorrect1)
 
             LimitView(
                 approachingValue = list[2].toString(),
                 numerator = "x² - 1",
                 denominator = "x - 1",
                 userInput = userInput[1],
-                isAnswerCorrect = isAnswerCorrect,
+                isAnswerCorrect = isAnswerCorrect2,
                 correctAnswer = correctAnswer2.toString()
             )
 
             CheckButton(
                 vm,
-                taskEntity,
-                checkAnswer.all { it },
-                isAnswerCorrect
+                taskEntity2,
+                userInput[1].value == correctAnswer2.toString(),
+                isAnswerCorrect2
             )
 
-            IsAnswerCorrect(isAnswerCorrect)
+            IsAnswerCorrect(isAnswerCorrect2)
         }
     }
 }

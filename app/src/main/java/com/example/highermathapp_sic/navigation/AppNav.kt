@@ -18,6 +18,7 @@ fun AppNav(vm: TaskViewModel = viewModel()) {
 
     val screensWithVm: List<Pair<String, @Composable (NavHostController, TaskViewModel) -> Unit>> = listOf(
         "MainScreen" to { nc, v -> MainScreen(nc, v) },
+        "NavigationScreen" to { nc, v -> NavScreen(nc, v)},
         "MatrixAddSub" to { nc, v -> MatrixAddSub(nc, v) },
         "MatrixMul" to { nc, v -> MatrixMul(nc, v) },
         "MatrixDet" to { nc, v -> MatrixDet(nc, v) },
@@ -35,10 +36,6 @@ fun AppNav(vm: TaskViewModel = viewModel()) {
         navController = navController,
         startDestination = "MainScreen"
     ) {
-        composable("NavigationScreen") {
-            NavScreen(navController)
-        }
-
         for ((route, screen) in screensWithVm) {
             composable(route) {
                 screen(navController, vm)

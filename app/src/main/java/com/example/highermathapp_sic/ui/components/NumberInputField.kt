@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -36,7 +37,10 @@ fun NumberInputField(
             modifier = Modifier
                 .width(32.dp),
             onValueChange = { userAnswer ->
-                if (userAnswer.matches(Regex("-?\\d{0,3}"))) {
+                val cleaned = userAnswer.replace(',', '.')
+                val regex = Regex("-?\\d*\\.?\\d*")
+
+                if (cleaned.matches(regex) && cleaned.length <= 4) {
                     userInput.value = userAnswer
                 }
             },
@@ -45,7 +49,8 @@ fun NumberInputField(
                 color = color
             ),
             singleLine = true,
-            readOnly = isAnswerCorrect == true
+            readOnly = isAnswerCorrect == true,
+            cursorBrush = SolidColor(color)
         )
     }
 }
