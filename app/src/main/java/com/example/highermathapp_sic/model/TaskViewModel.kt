@@ -1,9 +1,14 @@
-package com.example.highermathapp_sic.data
+package com.example.highermathapp_sic.model
 
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.highermathapp_sic.model.TaskGenerator
+import com.example.highermathapp_sic.data.TaskDatabase
+import com.example.highermathapp_sic.data.TaskEntity
+import com.example.highermathapp_sic.data.TaskGroupStats
+import com.example.highermathapp_sic.data.TaskGroupTotalStats
+import com.example.highermathapp_sic.data.TaskRepository
+import com.example.highermathapp_sic.data.TaskTypeStatus
 
 class TaskViewModel(application: Application) : ViewModel() {
     val taskList: LiveData<List<TaskEntity>>
@@ -14,7 +19,7 @@ class TaskViewModel(application: Application) : ViewModel() {
     private var initialized = false
 
     init {
-        val taskDb = TaskDatabase.getInstance(application)
+        val taskDb = TaskDatabase.Companion.getInstance(application)
         val taskDao = taskDb.taskDao()
         repository = TaskRepository(taskDao)
         taskList = repository.tasks
@@ -67,7 +72,8 @@ class TaskViewModel(application: Application) : ViewModel() {
     }
 
     fun addTask(taskContent: String, taskGroup: TaskGroup, taskType: TaskType) {
-        val entity = TaskEntity(taskContent = taskContent, taskGroup = taskGroup, taskType = taskType)
+        val entity =
+            TaskEntity(taskContent = taskContent, taskGroup = taskGroup, taskType = taskType)
         repository.addTask(entity)
     }
 

@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.highermathapp_sic.data.TaskEntity
-import com.example.highermathapp_sic.data.TaskViewModel
+import com.example.highermathapp_sic.model.TaskViewModel
 
 @Composable
 fun CheckButton(

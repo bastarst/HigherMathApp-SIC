@@ -33,7 +33,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.highermathapp_sic.data.TaskEntity
-import com.example.highermathapp_sic.data.TaskViewModel
+import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.model.Matrix
 
 @Composable

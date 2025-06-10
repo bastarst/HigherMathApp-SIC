@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.highermathapp_sic.data.TaskViewModel
+import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.ui.screens.calculus.*
 import com.example.highermathapp_sic.ui.screens.linearalgebra.*
 import com.example.highermathapp_sic.ui.screens.MainScreen

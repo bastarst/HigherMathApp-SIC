@@ -9,9 +9,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.highermathapp_sic.data.TaskGroup
-import com.example.highermathapp_sic.data.TaskType
-import com.example.highermathapp_sic.data.TaskViewModel
+import com.example.highermathapp_sic.model.TaskGroup
+import com.example.highermathapp_sic.model.TaskType
+import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.model.Matrix
 import com.example.highermathapp_sic.model.TaskContentConverter
 import com.example.highermathapp_sic.ui.components.BaseScreenLayout

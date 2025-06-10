@@ -1,6 +1,8 @@
 package com.example.highermathapp_sic.data
 
 import androidx.room.TypeConverter
+import com.example.highermathapp_sic.model.TaskGroup
+import com.example.highermathapp_sic.model.TaskType
 
 class Converters {
     @TypeConverter

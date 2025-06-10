@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.highermathapp_sic.data.TaskGroup
-import com.example.highermathapp_sic.data.TaskViewModel
+import com.example.highermathapp_sic.model.TaskGroup
+import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.ui.components.MathAppTopBar
 import com.example.highermathapp_sic.ui.components.TheoreticalPart
 

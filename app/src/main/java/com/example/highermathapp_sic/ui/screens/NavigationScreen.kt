@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.highermathapp_sic.data.TaskType
-import com.example.highermathapp_sic.data.TaskViewModel
+import com.example.highermathapp_sic.model.TaskType
+import com.example.highermathapp_sic.model.TaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

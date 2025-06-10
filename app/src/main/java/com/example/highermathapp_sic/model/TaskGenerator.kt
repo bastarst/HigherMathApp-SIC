@@ -1,6 +1,5 @@
 package com.example.highermathapp_sic.model
 
-import com.example.highermathapp_sic.data.TaskType
 import kotlin.random.Random
 
 object TaskGenerator {
