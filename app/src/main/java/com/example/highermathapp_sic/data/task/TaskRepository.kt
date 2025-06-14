@@ -1,4 +1,4 @@
-package com.example.highermathapp_sic.data
+package com.example.highermathapp_sic.data.task
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
@@ -10,10 +10,9 @@ class TaskRepository(private val taskDao: TaskDao) {
 
     val tasks: LiveData<List<TaskEntity>> = taskDao.getAllTaskEntity()
 
-    fun addTask(task: TaskEntity) {
-        coroutineScope.launch(Dispatchers.IO) {
-            taskDao.insertTask(task)
-        }
+    suspend fun addTask(task: TaskEntity): TaskEntity {
+        var newId = taskDao.insertTask(task).toInt()
+        return task.copy(id = newId)
     }
 
     fun removeTask(id: Int) {

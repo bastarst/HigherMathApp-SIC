@@ -1,7 +1,9 @@
 package com.example.highermathapp_sic.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,9 +25,7 @@ fun MathAppTopBar(
             Text(title)
         },
          navigationIcon = {
-             IconButton(onClick = {
-                 navController.navigate("NavigationScreen")
-             }
+             IconButton(onClick = { navController.navigate("NavigationScreen") }
              ) {
                  Icon(
                      imageVector = Icons.Default.Menu,
@@ -33,6 +33,14 @@ fun MathAppTopBar(
                  )
              }
          },
+        actions = { IconButton(onClick = { navController.navigate("SettingsScreen")}
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "Settings",
+            )
+        }
+        },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer

@@ -36,101 +36,58 @@ fun MainScreen(
     navController: NavController,
     vm: TaskViewModel = viewModel()
 ) {
-    val stats = vm.correctStats.observeAsState(listOf())
-    val total = vm.taskGroupTotalStats.observeAsState(listOf())
-
-    if(total.value.isNotEmpty()) {
+    Scaffold(
+        topBar = { MathAppTopBar("Главный экран", navController) }
+    ) { innerPadding ->
+        val stats = vm.correctStats.observeAsState(listOf())
+        val total = vm.taskGroupTotalStats.observeAsState(listOf())
         val linearCorrect =
             stats.value.find { it.taskGroup == TaskGroup.LINEAR_ALGEBRA }?.correctCount ?: 0
         val calculusCorrect =
             stats.value.find { it.taskGroup == TaskGroup.CALCULUS }?.correctCount ?: 0
         val linearTotal =
-            total.value.find { it.taskGroup == TaskGroup.LINEAR_ALGEBRA }?.totalCount ?: 0
+            total.value.find { it.taskGroup == TaskGroup.LINEAR_ALGEBRA }?.totalCount ?: 10
         val calculusTotal =
-            total.value.find { it.taskGroup == TaskGroup.CALCULUS }?.totalCount ?: 0
+            total.value.find { it.taskGroup == TaskGroup.CALCULUS }?.totalCount ?: 8
 
-        Scaffold(
-            topBar = { MathAppTopBar("Главный экран", navController) }
-        ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(2.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             Column(
                 modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(2.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp, 2.dp)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "ПРОГРЕСС:",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                TaskGroupProgressBar("Лин. алгебра", linearCorrect, linearTotal)
-
-                TaskGroupProgressBar("Мат. анализ", calculusCorrect, calculusTotal)
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(
-                        onClick = { navController.navigate("MatrixAddSub") }
-                    ) {
-                        Text(
-                            text = "Начать",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-
-                TheoreticalPart(fileName = "main_screen.txt")
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 8.dp)
-                    ,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(
-                        onClick = {
-                            vm.clearAllTasks()
-                            navController.navigate("MatrixAddSub")
-                        }
-                    ) {
-                        Text(
-                            text = "Начать сначала",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-        }
-    } else {
-        Scaffold(
-            topBar = { MathAppTopBar("Главный экран", navController) }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(2.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(16.dp, 2.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Загрузка...",
+                    text = "ПРОГРЕСС:",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            TaskGroupProgressBar("Лин. алгебра", linearCorrect, linearTotal)
+
+            TaskGroupProgressBar("Мат. анализ", calculusCorrect, calculusTotal)
+
+            TheoreticalPart(fileName = "main_screen.txt")
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate("MatrixAddSub") }
+            ) {
+                Text(
+                    text = "Начать",
                     style = MaterialTheme.typography.titleLarge
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

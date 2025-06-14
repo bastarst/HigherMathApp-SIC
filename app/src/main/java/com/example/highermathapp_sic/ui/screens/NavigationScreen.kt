@@ -91,8 +91,7 @@ fun NavScreen(
                 )
             )
         }
-    ) {
-        innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {

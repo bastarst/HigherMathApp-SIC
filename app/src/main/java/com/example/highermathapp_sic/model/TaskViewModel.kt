@@ -3,19 +3,23 @@ package com.example.highermathapp_sic.model
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.highermathapp_sic.data.TaskDatabase
-import com.example.highermathapp_sic.data.TaskEntity
-import com.example.highermathapp_sic.data.TaskGroupStats
-import com.example.highermathapp_sic.data.TaskGroupTotalStats
-import com.example.highermathapp_sic.data.TaskRepository
-import com.example.highermathapp_sic.data.TaskTypeStatus
+import com.example.highermathapp_sic.data.task.TaskDatabase
+import com.example.highermathapp_sic.data.task.TaskEntity
+import com.example.highermathapp_sic.data.task.TaskGroupStats
+import com.example.highermathapp_sic.data.task.TaskGroupTotalStats
+import com.example.highermathapp_sic.data.task.TaskRepository
+import com.example.highermathapp_sic.data.task.TaskTypeStatus
+import com.example.highermathapp_sic.remote.TaskFireStoreService
 
-class TaskViewModel(application: Application) : ViewModel() {
+class TaskViewModel(
+    application: Application,
+    mode: Boolean
+) : ViewModel() {
     val taskList: LiveData<List<TaskEntity>>
     val correctStats: LiveData<List<TaskGroupStats>>
     val taskGroupTotalStats: LiveData<List<TaskGroupTotalStats>>
     val taskTypeStatusList: LiveData<List<TaskTypeStatus>>
-    private val repository: TaskRepository
+    val repository: TaskRepository
     private var initialized = false
 
     init {
@@ -26,20 +30,20 @@ class TaskViewModel(application: Application) : ViewModel() {
         correctStats = taskDao.getCorrectAnswersCountPerGroup()
         taskGroupTotalStats = taskDao.getTotalTasksPerGroup()
         taskTypeStatusList = taskDao.getAllTaskTypeStatus()
-        taskList.observeForever { list ->
-            if (!initialized && list.isNullOrEmpty()) {
-                initialTaskDataBase()
-                initialized = true
-            }
-        }
+//        taskList.observeForever { list ->
+//            if (!initialized && list.isNullOrEmpty()) {
+//                initialTaskDataBase()
+//                initialized = true
+//            }
+//        }
     }
 
-    private fun initialTaskDataBase() {
+    suspend fun initialTaskDataBase() {
         initialLADataBase()
         initialCalculusDataBase()
     }
 
-    private fun initialLADataBase() {
+    private suspend fun initialLADataBase() {
         addLATask(TaskType.ADDITION)
         addLATask(TaskType.SUBTRACTION)
         addLATask(TaskType.MULTIPLICATION_BY_NUM)
@@ -52,7 +56,7 @@ class TaskViewModel(application: Application) : ViewModel() {
         addLATask(TaskType.CRAMER_RULE)
     }
 
-    private fun initialCalculusDataBase() {
+    private suspend fun initialCalculusDataBase() {
         addCalculusTask(TaskType.SEQUENCE_LIMIT)
         addCalculusTask(TaskType.FUNCTIONAL_LIMIT_1)
         addCalculusTask(TaskType.FUNCTIONAL_LIMIT_2)
@@ -69,28 +73,33 @@ class TaskViewModel(application: Application) : ViewModel() {
             TaskGroup.CALCULUS -> TaskGenerator.generateCalculusTask(taskEntity.taskType!!)
         }
         repository.updateTask(taskEntity.id, updatedTaskContent)
+        TaskFireStoreService.updateTaskInFireStore(taskEntity.id, updatedTaskContent)
     }
 
-    fun addTask(taskContent: String, taskGroup: TaskGroup, taskType: TaskType) {
-        val entity =
-            TaskEntity(taskContent = taskContent, taskGroup = taskGroup, taskType = taskType)
-        repository.addTask(entity)
+    suspend fun addTask(taskContent: String, taskGroup: TaskGroup, taskType: TaskType) {
+        val entity = TaskEntity(
+            taskContent = taskContent,
+            taskGroup = taskGroup,
+            taskType = taskType
+        )
+        val task = repository.addTask(entity)
+        TaskFireStoreService.uploadTaskToFireStore(task)
     }
 
     fun updateAnswerCorrect(id: Int, isCorrect: Boolean) {
         repository.updateAnswerCorrect(id, isCorrect)
+        TaskFireStoreService.updateAnswerCorrectInFireStore(id, isCorrect)
     }
 
     fun clearAllTasks() {
         repository.clearAllTasks()
-        initialTaskDataBase()
     }
 
-    private fun addLATask(taskType: TaskType) {
+    private suspend fun addLATask(taskType: TaskType) {
         addTask(TaskGenerator.generateLinearAlgebraTask(taskType), TaskGroup.LINEAR_ALGEBRA, taskType)
     }
 
-    private fun addCalculusTask(taskType: TaskType) {
+    private suspend fun addCalculusTask(taskType: TaskType) {
         addTask(TaskGenerator.generateCalculusTask(taskType), TaskGroup.CALCULUS, taskType)
     }
 }

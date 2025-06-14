@@ -4,44 +4,50 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.highermathapp_sic.model.AppSettingsViewModel
 import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.navigation.AppNav
 import com.example.highermathapp_sic.ui.theme.HigherMathAppSICTheme
 
 @Suppress("UNCHECKED_CAST")
-class TaskModelFactory(val application: Application) : ViewModelProvider.Factory {
+class TaskModelFactory(val application: Application, val mode: Boolean) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TaskViewModel(application) as T
+        return TaskViewModel(application, mode) as T
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class AppSettingsViewModelFactory(val application: Application) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return AppSettingsViewModel(application) as T
     }
 }
 
 class MainActivity : ComponentActivity() {
+    private lateinit var appSettingsViewModel: AppSettingsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val settingsFactory = AppSettingsViewModelFactory(application)
+        appSettingsViewModel = ViewModelProvider(this, settingsFactory)[AppSettingsViewModel::class.java]
+
         setContent {
             HigherMathAppSICTheme {
-                MathApp()
+                val settings = appSettingsViewModel.settings.observeAsState()
+
+                val isOffline = settings.value?.mode == "offline"
+
+                val taskViewModel: TaskViewModel = viewModel(
+                    factory = TaskModelFactory(application, isOffline)
+                )
+
+                AppNav(taskViewModel, appSettingsViewModel)
             }
         }
-    }
-}
-
-@Composable
-fun MathApp() {
-    val owner = LocalViewModelStoreOwner.current
-
-    owner?.let {
-        val viewModel: TaskViewModel = viewModel(
-            it,
-            "TaskViewModel",
-            TaskModelFactory(LocalContext.current.applicationContext as Application)
-        )
-        AppNav(viewModel)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.highermathapp_sic.data
+package com.example.highermathapp_sic.data.task
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -29,7 +29,7 @@ interface TaskDao {
     fun getAllTaskEntity(): LiveData<List<TaskEntity>>
 
     @Insert
-    fun insertTask(task: TaskEntity)
+    suspend fun insertTask(task: TaskEntity): Long
 
     @Query("DELETE FROM task_entity WHERE id = :id")
     fun deleteTask(id: Int)

@@ -1,4 +1,4 @@
-package com.example.highermathapp_sic.data
+package com.example.highermathapp_sic.data.task
 
 import androidx.room.TypeConverter
 import com.example.highermathapp_sic.model.TaskGroup

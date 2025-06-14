@@ -9,7 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.example.highermathapp_sic.data.TaskEntity
+import com.example.highermathapp_sic.data.task.TaskEntity
 import com.example.highermathapp_sic.model.TaskViewModel
 
 @Composable

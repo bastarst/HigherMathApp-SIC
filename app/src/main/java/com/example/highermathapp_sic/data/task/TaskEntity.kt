@@ -1,4 +1,4 @@
-package com.example.highermathapp_sic.data
+package com.example.highermathapp_sic.data.task
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,4 +13,14 @@ data class TaskEntity(
     var taskType: TaskType? = null,
     val taskContent: String? = null,
     val isAnswerCorrect: Boolean? = null
-)
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "id" to id,
+            "taskGroup" to taskGroup?.name,
+            "taskType" to taskType?.name,
+            "taskContent" to taskContent,
+            "isAnswerCorrect" to isAnswerCorrect
+        )
+    }
+}

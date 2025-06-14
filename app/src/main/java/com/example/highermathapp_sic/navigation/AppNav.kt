@@ -1,22 +1,29 @@
 package com.example.highermathapp_sic.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.highermathapp_sic.model.AppSettingsViewModel
 import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.ui.screens.calculus.*
 import com.example.highermathapp_sic.ui.screens.linearalgebra.*
 import com.example.highermathapp_sic.ui.screens.MainScreen
 import com.example.highermathapp_sic.ui.screens.NavScreen
+import com.example.highermathapp_sic.ui.screens.SettingsScreen
+import com.example.highermathapp_sic.ui.screens.StartScreen
+import com.example.highermathapp_sic.ui.screens.authentication.LoginScreen
+import com.example.highermathapp_sic.ui.screens.authentication.RegistrationScreen
 
 @Composable
-fun AppNav(vm: TaskViewModel = viewModel()) {
+fun AppNav(
+    taskViewModel: TaskViewModel,
+    appSettingsViewModel: AppSettingsViewModel
+) {
     val navController = rememberNavController()
 
-    val screensWithVm: List<Pair<String, @Composable (NavHostController, TaskViewModel) -> Unit>> = listOf(
+    val screensWithTaskVm: List<Pair<String, @Composable (NavHostController, TaskViewModel) -> Unit>> = listOf(
         "MainScreen" to { nc, v -> MainScreen(nc, v) },
         "NavigationScreen" to { nc, v -> NavScreen(nc, v)},
         "MatrixAddSub" to { nc, v -> MatrixAddSub(nc, v) },
@@ -32,13 +39,34 @@ fun AppNav(vm: TaskViewModel = viewModel()) {
         "DefiniteIntegrals" to { nc, v -> DefiniteIntegrals(nc, v) }
     )
 
+    val screensWithoutVm: List<Pair<String, @Composable (NavHostController) -> Unit>> = listOf(
+        //"StartScreen" to { nc -> StartScreen(nc) },
+        "RegistrationScreen" to { nc -> RegistrationScreen(nc) }
+    )
+
     NavHost(
         navController = navController,
-        startDestination = "MainScreen"
+        startDestination = "StartScreen"
     ) {
-        for ((route, screen) in screensWithVm) {
+        composable("LoginScreen") {
+            LoginScreen(navController, taskViewModel, appSettingsViewModel)
+        }
+        composable("SettingsScreen") {
+            SettingsScreen(navController, taskViewModel, appSettingsViewModel)
+        }
+        composable("StartScreen") {
+            StartScreen(navController, appSettingsViewModel)
+        }
+
+        for ((route, screen) in screensWithoutVm) {
             composable(route) {
-                screen(navController, vm)
+                screen(navController)
+            }
+        }
+
+        for ((route, screen) in screensWithTaskVm) {
+            composable(route) {
+                screen(navController, taskViewModel)
             }
         }
     }
