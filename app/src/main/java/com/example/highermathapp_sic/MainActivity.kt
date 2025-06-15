@@ -37,9 +37,11 @@ class MainActivity : ComponentActivity() {
         appSettingsViewModel = ViewModelProvider(this, settingsFactory)[AppSettingsViewModel::class.java]
 
         setContent {
-            HigherMathAppSICTheme {
-                val settings = appSettingsViewModel.settings.observeAsState()
+            val settings = appSettingsViewModel.settings.observeAsState()
 
+            HigherMathAppSICTheme(
+                darkTheme = settings.value?.darkTheme
+            ) {
                 val isOnline = settings.value?.mode == "online"
 
                 val taskViewModel: TaskViewModel = viewModel(

@@ -9,7 +9,15 @@ class AppSettingsRepository(private val appSettingsDao: AppSettingsDao) {
         appSettingsDao.insertSettings(settings)
     }
 
+    suspend fun setMode(mode: String) {
+        appSettingsDao.setMode(mode)
+    }
+
     suspend fun getSettingsOnce(): AppSettings? {
         return appSettingsDao.getSettingsOnce()
+    }
+
+    suspend fun updateDarkTheme(darkTheme: Boolean) {
+        appSettingsDao.updateDarkTheme(darkTheme)
     }
 }

@@ -29,8 +29,13 @@ class AppSettingsViewModel(application: Application) : ViewModel() {
 
     fun setMode(mode: String) {
         viewModelScope.launch {
-            val newSettings = AppSettings(id = 0, mode = mode)
-            repository.saveSettings(newSettings)
+            repository.setMode(mode)
+        }
+    }
+
+    fun updateDarkTheme(darkTheme: Boolean) {
+        viewModelScope.launch {
+            repository.updateDarkTheme(darkTheme)
         }
     }
 }
