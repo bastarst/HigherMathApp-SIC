@@ -22,12 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.highermathapp_sic.model.AppSettingsViewModel
 import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.remote.TaskFireStoreService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -155,7 +157,10 @@ fun LoginScreen(
         }
 
         TextButton(onClick = {
-            appSettingsViewModel.setMode("offline")
+            taskViewModel.viewModelScope.launch {
+                appSettingsViewModel.setMode("offline")
+                taskViewModel.initialTaskDataBase()
+            }
             navController.navigate("MainScreen")
         }) {
             Text("Вы можете использовать приложение оффлайн")

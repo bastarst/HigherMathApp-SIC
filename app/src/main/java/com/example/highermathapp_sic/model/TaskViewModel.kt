@@ -13,14 +13,13 @@ import com.example.highermathapp_sic.remote.TaskFireStoreService
 
 class TaskViewModel(
     application: Application,
-    mode: Boolean
+    private val isOnline: Boolean
 ) : ViewModel() {
     val taskList: LiveData<List<TaskEntity>>
     val correctStats: LiveData<List<TaskGroupStats>>
     val taskGroupTotalStats: LiveData<List<TaskGroupTotalStats>>
     val taskTypeStatusList: LiveData<List<TaskTypeStatus>>
     val repository: TaskRepository
-    private var initialized = false
 
     init {
         val taskDb = TaskDatabase.Companion.getInstance(application)
@@ -30,12 +29,6 @@ class TaskViewModel(
         correctStats = taskDao.getCorrectAnswersCountPerGroup()
         taskGroupTotalStats = taskDao.getTotalTasksPerGroup()
         taskTypeStatusList = taskDao.getAllTaskTypeStatus()
-//        taskList.observeForever { list ->
-//            if (!initialized && list.isNullOrEmpty()) {
-//                initialTaskDataBase()
-//                initialized = true
-//            }
-//        }
     }
 
     suspend fun initialTaskDataBase() {
@@ -73,7 +66,7 @@ class TaskViewModel(
             TaskGroup.CALCULUS -> TaskGenerator.generateCalculusTask(taskEntity.taskType!!)
         }
         repository.updateTask(taskEntity.id, updatedTaskContent)
-        TaskFireStoreService.updateTaskInFireStore(taskEntity.id, updatedTaskContent)
+        if (isOnline) TaskFireStoreService.updateTaskInFireStore(taskEntity.id, updatedTaskContent)
     }
 
     suspend fun addTask(taskContent: String, taskGroup: TaskGroup, taskType: TaskType) {
@@ -83,12 +76,12 @@ class TaskViewModel(
             taskType = taskType
         )
         val task = repository.addTask(entity)
-        TaskFireStoreService.uploadTaskToFireStore(task)
+        if (isOnline) TaskFireStoreService.uploadTaskToFireStore(task)
     }
 
     fun updateAnswerCorrect(id: Int, isCorrect: Boolean) {
         repository.updateAnswerCorrect(id, isCorrect)
-        TaskFireStoreService.updateAnswerCorrectInFireStore(id, isCorrect)
+        if (isOnline) TaskFireStoreService.updateAnswerCorrectInFireStore(id, isCorrect)
     }
 
     fun clearAllTasks() {

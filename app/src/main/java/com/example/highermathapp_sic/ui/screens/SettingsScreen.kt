@@ -23,7 +23,6 @@ import com.example.highermathapp_sic.model.TaskViewModel
 import com.example.highermathapp_sic.remote.TaskFireStoreService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +65,7 @@ fun SettingsScreen(
             }
 
             Button(onClick = {
-                Firebase.auth.signOut()
+                if (settings.value?.mode == "offline") Firebase.auth.signOut()
                 taskViewModel.clearAllTasks()
                 navController.navigate("LoginScreen")
             }) {
@@ -76,8 +75,10 @@ fun SettingsScreen(
             Button(onClick = {
                 taskViewModel.viewModelScope.launch {
                     taskViewModel.clearAllTasks()
-                    TaskFireStoreService.deleteAllTasksFromFireStore()
-                    TaskFireStoreService.downloadTasksFromFireStoreOrInit(taskViewModel)
+                    if (settings.value?.mode == "offline") {
+                        TaskFireStoreService.deleteAllTasksFromFireStore()
+                        TaskFireStoreService.downloadTasksFromFireStoreOrInit(taskViewModel)
+                    }
                 }
                 navController.navigate("MainScreen")
             }) {

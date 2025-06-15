@@ -40,10 +40,10 @@ class MainActivity : ComponentActivity() {
             HigherMathAppSICTheme {
                 val settings = appSettingsViewModel.settings.observeAsState()
 
-                val isOffline = settings.value?.mode == "offline"
+                val isOnline = settings.value?.mode == "online"
 
                 val taskViewModel: TaskViewModel = viewModel(
-                    factory = TaskModelFactory(application, isOffline)
+                    factory = TaskModelFactory(application, isOnline)
                 )
 
                 AppNav(taskViewModel, appSettingsViewModel)
